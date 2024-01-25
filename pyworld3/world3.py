@@ -279,7 +279,6 @@ class World3(Population, Capital, Agriculture, Pollution, Resource):
         method : str, optional
             Numerical integration method: "euler" or "odeint". The default is
             "euler".
-
         """
         self.set_population_delay_functions(method=method)
         self.set_capital_delay_functions(method=method)
