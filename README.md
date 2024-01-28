@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ![Logo](./img/logo.png)
 
 > The World3 model revisited in Python
@@ -139,3 +140,7 @@ Cambridge, MA: Wright-Allen Press, 1974.
 Behrens. *The Limits to Growth*. New York 102, no. 1972 (1972): 27.
 - Markowich, P. *Sensitivity Analysis of Tech 1-A Systems Dynamics Model for
 Technological Shift*, (1979).
+=======
+# KEX
+Ett försök att göra en readme fil. Hoppas inte detta krashar hela GIT:en!
+>>>>>>> 40c89cb26ba73795204b4ce20e8ace295f6e2ae4
