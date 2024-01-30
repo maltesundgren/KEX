@@ -35,12 +35,13 @@
 import os
 import json
 
+import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import numpy as np
 import inspect
 
-from .specials import Dlinf3, clip, Delay3
-from .utils import requires, _create_control_function
+from pyworld3.specials import Dlinf3, clip, Delay3
+from pyworld3.utils import requires, _create_control_function, plot_world_variables
 
 
 class Pollution:
@@ -494,3 +495,19 @@ class Pollution:
         From step k requires: AHL PPOL
         """
         self.ppasr[kl] = self.ppol[k] / (self.ahl[k] * 1.4)
+
+
+if __name__ == '__main__':
+    
+    pol = Pollution()
+    pol.set_pollution_control()
+    pol.init_pollution_constants()
+    pol.init_pollution_variables()
+    pol.init_exogenous_inputs()
+    pol.set_pollution_delay_functions()
+    pol.set_pollution_table_functions()
+    pol.run_pollution()
+    
+    plot_world_variables(pol.time, [pol.ppolx], ['PPOLX'], [[0,1000]], figsize = (7, 5), grid = 1, title= 'Title')
+    plt.show()
+    
