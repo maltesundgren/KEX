@@ -8,9 +8,10 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppgao],
-            ["PPGAO"],
-            [[1000, 3e8]],
+            [world3.ppgao, world3.ppgr, world3.ppgio, world3.ppgf],
+            ["PPGAO", "PPGR", "PPGIO", "PPGF"],
+            [[0.9*min(world3.ppgao), 1.1*max(world3.ppgao)], [0.9*min(world3.ppgr), 1.1*max(world3.ppgr)], 
+            [0.9*min(world3.ppgio), 1.1*max(world3.ppgio)], [0.9*min(world3.ppgf), 1.1*max(world3.ppgf)]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -31,7 +32,6 @@ def example2():
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
     world3.run_world3()
-    print(world3.ppgao)
     simulation(world3, "Tuning the pollution sector")
 
 

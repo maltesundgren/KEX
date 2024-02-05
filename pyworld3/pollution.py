@@ -40,8 +40,8 @@ from scipy.interpolate import interp1d
 import numpy as np
 import inspect
 
-from pyworld3.specials import Dlinf3, clip, Delay3
-from pyworld3.utils import requires, _create_control_function, plot_world_variables
+from specials import Dlinf3, clip, Delay3
+from utils import requires, _create_control_function, plot_world_variables
 
 
 class Pollution:
@@ -508,6 +508,16 @@ if __name__ == '__main__':
     pol.set_pollution_table_functions()
     pol.run_pollution()
     
-    plot_world_variables(pol.time, [pol.ppolx], ['PPOLX'], [[0,1000]], figsize = (7, 5), grid = 1, title= 'Title')
+   
+    plot_world_variables(
+            pol.time,
+            [pol.ppgao, pol.ppgr, pol.ppgio, pol.ppgf],
+            ["PPGAO", "PPGR", "PPGIO", "PPGF"],
+            [[0.9*min(pol.ppgao), 1.1*max(pol.ppgao)], [0.9*min(pol.ppgr), 1.1*max(pol.ppgr)], 
+            [0.9*min(pol.ppgio), 1.1*max(pol.ppgio)], [0.9*min(pol.ppgf), 1.1*max(pol.ppgf)]],
+            figsize=(7, 5),
+            grid=1,
+            title='pollution',
+        )
     plt.show()
-    
+
