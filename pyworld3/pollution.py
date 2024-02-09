@@ -40,8 +40,8 @@ from scipy.interpolate import interp1d
 import numpy as np
 import inspect
 
-from specials import Dlinf3, clip, Delay3
-from utils import requires, _create_control_function, plot_world_variables
+from .specials import Dlinf3, clip, Delay3
+from .utils import requires, _create_control_function, plot_world_variables
 
 
 class Pollution:

@@ -1,6 +1,7 @@
 import pyworld3
 from pyworld3.utils import plot_world_variables
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def simulation(world3,title_name):
@@ -32,7 +33,10 @@ def example2():
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
     world3.run_world3()
-    simulation(world3, "Tuning the pollution sector")
+    ppolx = np.linspace(1,1001)
+    plt.plot(ppolx, world3.ahlm_f(ppolx))
+    plt.show()
+    #simulation(world3, "Tuning the pollution sector")
 
 
 def example3():
@@ -69,5 +73,6 @@ if __name__ == "__main__":
     example2()
     #example3()
     #example4()
+
 
 
