@@ -10,12 +10,15 @@ params = {"lines.linewidth": "3"}
 plt.rcParams.update(params)
 
 
-def fcaor_control(t, world, k):
-    return world.fioac[k]
+def icor_control(t, world, k):
+    if t <= 2023:
+        return world.icor[k]
+    else:
+        return world.fioac[k]
 
 
 world3 = World3(year_max=2100)
-world3.set_world3_control(fcaor_control=fcaor_control)
+world3.set_world3_control(icor_control=icor_control)
 world3.init_world3_constants()
 world3.init_world3_variables()
 world3.set_world3_table_functions()
@@ -36,9 +39,16 @@ plt.savefig("fig_world3_control_general.pdf")
 
 plot_world_variables(
     world3.time,
-    [world3.fcaor, world3.io, world3.tai, world3.aiph, world3.fioaa],
+    [
+        world3.fcaor,
+        world3.io,
+        world3.tai,
+        world3.aiph,
+        world3.fioaa,
+        world3.icor_control_values,
+    ],
     ["FCAOR", "IO", "TAI", "AI", "FIOAA"],
-    [[0, 1], [0, 4e12], [0, 4e12], [0, 2e2], [0, 0.201]],
+    [[0, 1], [0, 4e12], [0, 4e12], [0, 2e2]],
     img_background="./img/fig7-8.png",
     figsize=(7, 5),
     title="World3 control run - Capital sector",

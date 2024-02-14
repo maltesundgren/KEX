@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ![Logo](./img/logo.png)
 
 > The World3 model revisited in Python
@@ -99,7 +98,11 @@ Close-loop control works similarly but one must define a control function with 3
 ``` Python
 from pyworld3 import World3
 
-icor_control = lambda t, world, k: world.fioac[k] # This is the feedback control function
+def icor_control(t, world, k): # This is the feedback control function
+    if t <= 2023:
+        return world.icor[k] # Default value before year 2023
+    else:
+        return world.fioac[k] # We start the new policy from year 2024
 
 world3 = World3(year_max=2100)
 world3.set_world3_control(icor_control=icor_control)
@@ -140,7 +143,3 @@ Cambridge, MA: Wright-Allen Press, 1974.
 Behrens. *The Limits to Growth*. New York 102, no. 1972 (1972): 27.
 - Markowich, P. *Sensitivity Analysis of Tech 1-A Systems Dynamics Model for
 Technological Shift*, (1979).
-=======
-# KEX
-Ett försök att göra en readme fil. Hoppas inte detta krashar hela GIT:en!
->>>>>>> 40c89cb26ba73795204b4ce20e8ace295f6e2ae4
