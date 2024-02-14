@@ -1,6 +1,6 @@
 
 """A testfile for the poll sector"""
-#Requires imports to get it to work.
+import pyworld3 
 
 if __name__ == '__main__':
     

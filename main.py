@@ -33,10 +33,10 @@ def example2():
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
     world3.run_world3()
-    ppolx = np.linspace(1,1001)
-    plt.plot(ppolx, world3.ahlm_f(ppolx))
-    plt.show()
-    #simulation(world3, "Tuning the pollution sector")
+    #ppolx = np.linspace(1,1001)
+    #plt.plot(ppolx, world3.ahlm_f(ppolx))
+    #plt.show()
+    simulation(world3, "Tuning the pollution sector")
 
 
 def example3():
@@ -69,8 +69,8 @@ def example4():
 
 
 if __name__ == "__main__":
-    #example1()
-    example2()
+    example1()
+    #example2()
     #example3()
     #example4()
 
