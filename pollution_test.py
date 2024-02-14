@@ -1,6 +1,8 @@
 
 """A testfile for the poll sector"""
-import pyworld3 
+import pyworld3
+from pyworld3.pollution import *
+import numpy as np
 
 if __name__ == '__main__':
     
@@ -24,4 +26,9 @@ if __name__ == '__main__':
             grid=1,
             title='pollution',
         )
+    plt.show()
+    
+    """Plots ahlm as function of ppolx"""
+    ppolx = np.linspace(0,1100)
+    plt.plot(ppolx, pol.ahlm_f(ppolx))
     plt.show()
