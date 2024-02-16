@@ -9,10 +9,10 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppgao, world3.ppgr, world3.ppgio, world3.ppgf],
-            ["PPGAO", "PPGR", "PPGIO", "PPGF"],
+            [world3.ppgao, world3.ppgr, world3.ppgio, world3.ppgf, world3.pop],
+            ["PPGAO", "PPGR", "PPGIO", "PPGF", "POP"],
             [[0.9*min(world3.ppgao), 1.1*max(world3.ppgao)], [0.9*min(world3.ppgr), 1.1*max(world3.ppgr)], 
-            [0.9*min(world3.ppgio), 1.1*max(world3.ppgio)], [0.9*min(world3.ppgf), 1.1*max(world3.ppgf)]],
+            [0.9*min(world3.ppgio), 1.1*max(world3.ppgio)], [0.9*min(world3.ppgf), 1.1*max(world3.ppgf)], [0.9*min(world3.pop), 1.1*max(world3.pop)]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -28,7 +28,7 @@ def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()           # choose the time limits and step.
     world3.set_world3_control()          # choose your controls
-    world3.init_world3_constants()       # choose the model constants.
+    world3.init_world3_constants(pet=1950)       # choose the model constants.
     world3.init_world3_variables()       # initialize all variables.
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
@@ -69,8 +69,8 @@ def example4():
 
 
 if __name__ == "__main__":
-    example1()
-    #example2()
+    #example1()
+    example2()
     #example3()
     #example4()
 
