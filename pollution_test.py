@@ -18,10 +18,10 @@ if __name__ == '__main__':
    
     plot_world_variables(
             pol.time,
-            [pol.ppgao, pol.ppgr, pol.ppgio, pol.ppgf],
-            ["PPGAO", "PPGR", "PPGIO", "PPGF"],
+            [pol.ppgao, pol.ppgr, pol.ppgio, pol.ppgf, pol.pop ],
+            ["PPGAO", "PPGR", "PPGIO", "PPGF", "POP"],
             [[0.9*min(pol.ppgao), 1.1*max(pol.ppgao)], [0.9*min(pol.ppgr), 1.1*max(pol.ppgr)], 
-            [0.9*min(pol.ppgio), 1.1*max(pol.ppgio)], [0.9*min(pol.ppgf), 1.1*max(pol.ppgf)]],
+            [0.9*min(pol.ppgio), 1.1*max(pol.ppgio)], [0.9*min(pol.ppgf), 1.1*max(pol.ppgf)], [0.9*min(pol.pop), 1.1*max(pol.pop)]],
             figsize=(7, 5),
             grid=1,
             title='pollution',
@@ -29,6 +29,6 @@ if __name__ == '__main__':
     plt.show()
     
     """Plots ahlm as function of ppolx"""
-    ppolx = np.linspace(0,1100)
+    ppolx = np.linspace(0,1001)
     plt.plot(ppolx, pol.ahlm_f(ppolx))
     plt.show()
