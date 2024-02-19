@@ -35,7 +35,7 @@ plot_world_variables(
     figsize=(7, 5),
     title="World3 control run - General",
 )
-plt.savefig("fig_world3_control_general.pdf")
+plt.show()
 
 plot_world_variables(
     world3.time,
@@ -53,8 +53,7 @@ plot_world_variables(
     figsize=(7, 5),
     title="World3 control run - Capital sector",
 )
-plt.savefig("fig_world3_control_capital.pdf")
-
+plt.show()
 plot_world_variables(
     world3.time,
     [world3.ly, world3.al, world3.fpc, world3.lmf, world3.pop],
@@ -64,4 +63,4 @@ plot_world_variables(
     figsize=(7, 5),
     title="World3 control run - Agriculture sector",
 )
-plt.savefig("fig_world3_control_agriculture.pdf")
+plt.show()
