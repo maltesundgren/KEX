@@ -319,6 +319,7 @@ class Pollution:
         self.aiph[k] = self.aiph_f(self.time[k])
         self.al[k] = self.al_f(self.time[k])
 
+
         self.plmp[k] = self.dlinf3_lmp(k, self.pd)
         self.pctcm[k] = self.pctcm_f(1 - self.plmp[k])
 

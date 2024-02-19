@@ -2,6 +2,7 @@ import pyworld3
 from pyworld3.utils import plot_world_variables
 import matplotlib.pyplot as plt
 import numpy as np
+from pyworld3.specials import Delay3
 
 
 def simulation(world3,title_name):
@@ -9,10 +10,11 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppgao, world3.ppgr, world3.ppgio, world3.ppgf, world3.pop],
-            ["PPGAO", "PPGR", "PPGIO", "PPGF", "POP"],
-            [[0.9*min(world3.ppgao), 1.1*max(world3.ppgao)], [0.9*min(world3.ppgr), 1.1*max(world3.ppgr)], 
-            [0.9*min(world3.ppgio), 1.1*max(world3.ppgio)], [0.9*min(world3.ppgf), 1.1*max(world3.ppgf)], [0.9*min(world3.pop), 1.1*max(world3.pop)]],
+            [world3.ppol, world3.ppasr, world3.ppapr, world3.ahl, world3.ppgao, world3.ppgio],
+            ["PPOL", "PPASR", "PPAPR", "AHL", "PPGAO", "PPGIO"],
+            [[0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)], 
+            [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ahl), 1.1*max(world3.ahl)], 
+            [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -24,11 +26,20 @@ def example1():
     pyworld3.hello_world3()
 
 
+def ppgf_control(t, world3, k):
+    y_values = np.linspace(1,0.01, 1000)
+    #exp_delay = Delay3(world3.ppgf_control, y_values, self.dt, self.time)
+    if t<=2000:
+        return 1
+    else: 
+        return 0.1
+
+
 def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()           # choose the time limits and step.
     world3.set_world3_control()          # choose your controls
-    world3.init_world3_constants(pet=1950)       # choose the model constants.
+    world3.init_world3_constants()       # choose the model constants. pet=1950 caps value of population
     world3.init_world3_variables()       # initialize all variables.
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
@@ -66,7 +77,6 @@ def example4():
     world3.set_world3_delay_functions()
     world3.run_world3(fast=False)
     simulation(world3, "Closed loop")
-
 
 if __name__ == "__main__":
     #example1()
