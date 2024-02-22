@@ -10,11 +10,11 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppol, world3.ppasr, world3.ppapr, world3.ahl, world3.ppgao, world3.ppgio],
-            ["PPOL", "PPASR", "PPAPR", "AHL", "PPGAO", "PPGIO"],
+            [world3.ppol, world3.ppasr, world3.ppapr, world3.ahl, world3.ppgao, world3.ppgio, world3.ppgf],
+            ["PPOL", "PPASR", "PPAPR", "AHL", "PPGAO", "PPGIO", "PPGF"],
             [[0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)], 
             [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ahl), 1.1*max(world3.ahl)], 
-            [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)]],
+            [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0, 1.1]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -29,7 +29,7 @@ def example1():
 def ppgf_control(t, world3, k):
     y_values = np.linspace(1,0.01, 1000)
     #exp_delay = Delay3(world3.ppgf_control, y_values, self.dt, self.time)
-    if t<=2000:
+    if t<=1970:
         return 1
     else: 
         return 0.1
@@ -38,15 +38,15 @@ def ppgf_control(t, world3, k):
 def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()           # choose the time limits and step.
-    world3.set_world3_control()          # choose your controls
+    world3.set_world3_control(ppgf_control = ppgf_control)          # choose your controls
     world3.init_world3_constants()       # choose the model constants. pet=1950 caps value of population
     world3.init_world3_variables()       # initialize all variables.
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
     world3.run_world3()
-    #ppolx = np.linspace(1,1001)
-    #plt.plot(ppolx, world3.ahlm_f(ppolx))
-    #plt.show()
+    iopc = np.linspace(1,1600)
+    plt.plot(iopc, world3.pcrum_f(iopc))
+    plt.show()
     simulation(world3, "Tuning the pollution sector")
 
 
