@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == '__main__':
     
-    pol = Pollution()
+    pol = Pollution(1900, 2200)
     pol.set_pollution_control()
     pol.init_pollution_constants()
     pol.init_pollution_variables()
@@ -29,6 +29,6 @@ if __name__ == '__main__':
     plt.show()
     
     """Plots ahlm as function of ppolx"""
-    ppolx = np.linspace(0,1001)
-    plt.plot(ppolx, pol.ahlm_f(ppolx))
-    plt.show()
+    #ppolx = np.linspace(0,1001)
+    #plt.plot(ppolx, pol.ahlm_f(ppolx))
+    #plt.show()
