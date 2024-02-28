@@ -249,7 +249,6 @@ class Pollution:
         Initialize all the necessary constants and variables to run the
         pollution sector alone. These exogenous parameters are outputs from
         the 4 other remaining sectors in a full simulation of World3.
-
         """
         # constants
         self.tdd = 10
