@@ -10,11 +10,9 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppol, world3.ppasr, world3.ppapr, world3.ahl, world3.ppgao, world3.ppgio, world3.ppgf],
-            ["PPOL", "PPASR", "PPAPR", "AHL", "PPGAO", "PPGIO", "PPGF"],
-            [[0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)], 
-            [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ahl), 1.1*max(world3.ahl)], 
-            [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0.9*min(world3.ppol), 1.1*max(world3.ppol)], [0, 1.1]],
+            [world3.ppolx, world3.ppol, world3.ppgf],
+            ["PPOLX", "PPGR", "PPGF"],
+            [[0.9*min(world3.ppolx), 1.1*max(world3.ppolx)], [0.9*min(world3.ppgr), 1.1*max(world3.ppgr)], [0, 1.1]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -29,7 +27,7 @@ def example1():
 def ppgf_control(t, world3, k):
     y_values = np.linspace(1,0.01, 1000)
     #exp_delay = Delay3(world3.ppgf_control, y_values, self.dt, self.time)
-    if t<=1970:
+    if world3.ppolx[k] <= 1.5:
         return 1
     else: 
         return 0.1
@@ -44,9 +42,9 @@ def example2():
     world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
     world3.run_world3()
-    iopc = np.linspace(1,1600)
-    plt.plot(iopc, world3.pcrum_f(iopc))
-    plt.show()
+    #iopc = np.linspace(1,1600)
+    #plt.plot(iopc, world3.pcrum_f(iopc))
+    #plt.show()
     simulation(world3, "Tuning the pollution sector")
 
 

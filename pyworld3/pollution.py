@@ -450,7 +450,8 @@ class Pollution:
         """
         From step k requires: nothing
         """
-        self.ppgf_control_values[k] = clip(self.ppgf_control(k), 0.01, 1)
+        #self.ppgf_control_values[k] = clip(self.ppgf_control(k), 0.01, 1) CLIP gör inget????
+        self.ppgf_control_values[k] = self.ppgf_control(k)
         self.ppgf[k] = self.ppgf_control_values[k]
 
     @requires(["ppgr"], ["ppgio", "ppgao", "ppgf"])
