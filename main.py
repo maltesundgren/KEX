@@ -10,9 +10,10 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppolx, world3.ppol, world3.ppgf],
-            ["PPOLX", "PPGR", "PPGF"],
-            [[0.9*min(world3.ppolx), 1.1*max(world3.ppolx)], [0.9*min(world3.ppgr), 1.1*max(world3.ppgr)], [0, 1.1]],
+            [world3.ppolx, world3.ppgr, world3.ppgf],
+            ["PPOLX", "PPGR", "PPGF", "POP", "IO", "FPC"],
+            [[0.9*min(world3.ppolx), 1.1*max(world3.ppolx)], [0.9*min(world3.ppgr), 1.1*max(world3.ppgr)],
+            [0.9*min(world3.ppgf), 1.1*max(world3.ppgf)]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -25,18 +26,38 @@ def example1():
 
 
 def ppgf_control(t, world3, k):
-    y_values = np.linspace(1,0.01, 1000)
-    #exp_delay = Delay3(world3.ppgf_control, y_values, self.dt, self.time)
-    if world3.ppolx[k] <= 1.5:
+    #if world3.ppolx[k] <= 1.5:
+    #    return 1
+    #else: 
+    #    return 0.1
+    ref = 3
+    K = 0.5
+    if abs((ref-world3.ppolx[k])*K)<=1:
+        return (ref-world3.ppolx[k])*K
+    else:
         return 1
-    else: 
-        return 0.1
+
+    #policyyear=1950
+    #if t<=1950:
+    #    return 1
+    #else:
+    #    return (1.2-world3.ppolx[k])*1.5
+        #return max(world3.ppgf[k]*(1-0.03**(t-policyyear)),0.1)
+
+    """
+    # 1.2 is what is set as desired ppolx in the pydynamo documentation
+    if (1-(world3.ppolx[k]/1.2)) < 0:
+        return 0.01
+    else:
+        return max(abs(1-(world3.ppolx[k]/1.2)), 0.01)
+    """    
+    
 
 
 def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()           # choose the time limits and step.
-    world3.set_world3_control(ppgf_control = ppgf_control)          # choose your controls
+    world3.set_world3_control(ppgf_control=ppgf_control)          # choose your controls
     world3.init_world3_constants()       # choose the model constants. pet=1950 caps value of population
     world3.init_world3_variables()       # initialize all variables.
     world3.set_world3_delay_functions()  # initialize delay functions.
@@ -45,6 +66,8 @@ def example2():
     #iopc = np.linspace(1,1600)
     #plt.plot(iopc, world3.pcrum_f(iopc))
     #plt.show()
+    print(max(world3.io)/max(world3.ppol))
+    print(world3.pop[-1])
     simulation(world3, "Tuning the pollution sector")
 
 
