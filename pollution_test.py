@@ -6,7 +6,7 @@ import numpy as np
 
 if __name__ == '__main__':
     
-    pol = Pollution(1900, 2200)
+    pol = Pollution(1900, 2100)
     pol.set_pollution_control()
     pol.init_pollution_constants()
     pol.init_pollution_variables()
