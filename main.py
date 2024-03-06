@@ -10,11 +10,10 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.ppolx, world3.al, world3.pop, world3.fioaa, world3.aiph, world3.pcrum],
-            ["PPOLX", "AL", "POP", "FIOAA", "AIPH", "PCRUM"],
+            [world3.ppolx, world3.al, world3.pop],
+            ["PPOLX", "AL", "POP"],
             [[0.9*min(world3.ppolx), 1.1*max(world3.ppolx)], [0.9*min(world3.al), 1.1*max(world3.al)],
-            [0.9*min(world3.pop), 1.1*max(world3.pop)],[0.9*min(world3.fioaa), 1.1*max(world3.fioaa)], 
-            [0.9*min(world3.aiph), 1.1*max(world3.aiph)], [0.9*min(world3.pcrum), 1.1*max(world3.pcrum)]],
+            [0.9*min(world3.pop), 1.1*max(world3.pop)]],
             figsize=(7, 5),
             grid=1,
             title=title_name,
@@ -31,14 +30,18 @@ def ppgf_control(t, world3, k):
     #    return 1
     #else: 
     #    return 0.1
-    ref = 3
+    """ref = 3
     K = 0.5
     if abs((ref-world3.ppolx[k])*K)<=1:
         if (ref-world3.ppolx[k])*K<0:
             return 0
         return (ref-world3.ppolx[k])*K
     else:
+        return 1"""
+    if world3.ppolx[k]<=9:
         return 1
+    else:
+        return 0.2
 
 def al_control(t, world3, k):
     ref=1.632e8
@@ -55,11 +58,11 @@ def al_control(t, world3, k):
 def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()           # choose the time limits and step.
-    world3.set_world3_control(al_control=al_control)          # choose your controls
+    world3.set_world3_control(ppgf_control=ppgf_control)          # choose your controls
     world3.init_world3_constants()       # choose the model constants. pet=1950 caps value of population
     world3.init_world3_variables()       # initialize all variables.
-    world3.set_world3_delay_functions()  # initialize delay functions.
     world3.set_world3_table_functions()  # get tables from a json file.
+    world3.set_world3_delay_functions()  # initialize delay functions.
     world3.run_world3()
     #iopc = np.linspace(1,1600)
     #plt.plot(iopc, world3.pcrum_f(iopc))

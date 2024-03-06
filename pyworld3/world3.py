@@ -480,7 +480,7 @@ def hello_world3():
     world3.set_world3_table_functions()
     world3.set_world3_delay_functions()
     world3.run_world3(fast=True)
-
+    print(world3.pop[-1])
     plot_world_variables(
         world3.time,
         [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx],

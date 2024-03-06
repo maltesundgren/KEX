@@ -244,7 +244,7 @@ class Agriculture:
             "lymap_control": lambda _: 1,
             "llmy_control": lambda _: 1,
             "fioaa_control": lambda _: 1,
-            "al_control": lambda _:9e9
+            #"al_control": lambda _:9e9
         }
         _create_control_function(self, default_control_functions, control_functions)
 
@@ -618,8 +618,8 @@ class Agriculture:
         """
         State variable, requires previous step only
         """
-        #self.al[k] = self.al[j] + self.dt * (self.ldr[jk] - self.ler[jk] - self.lrui[jk]) ÄNDRA TILLBAKS SEN
-        self.al[k] = self.al_control(k)
+        self.al[k] = self.al[j] + self.dt * (self.ldr[jk] - self.ler[jk] - self.lrui[jk]) 
+        #self.al[k] = self.al_control(k)
 
     @requires(["pal"])
     def _update_state_pal(self, k, j, jk):
