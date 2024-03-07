@@ -26,6 +26,14 @@ def example1():
     # Business as usual
     pyworld3.hello_world3()
 
+def pid_controller(world3, k, r, val, u, Kp, Ki, Kd):
+    err = np.full(3, np.nan)
+    err[k] = r-val[k]
+    err[k-1] = r-val[k-1]
+    err[k-2] = r-val[k-2]
+
+    u[k] = u[k-1] + Kp*(e[k]-e[k-1]) + Ki*world3.dt*e[k] + (Kd*(e[k]-2*e[k-1]+e[k-2]))/world3.dt    
+
 
 def ppgf_control(t, world3, k):
     #if world3.ppolx[k] <= 1.5:
