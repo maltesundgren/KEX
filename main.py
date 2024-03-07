@@ -10,10 +10,11 @@ def simulation(world3,title_name):
 
     plot_world_variables(
             world3.time,
-            [world3.io, world3.ic, world3.fioai],
-            ["IO", "IC", "FIOAI"],
-            [[0.9*min(world3.ic), 1.1*max(world3.ic)], [0.9*min(world3.ic), 1.1*max(world3.ic)], [0.9*min(world3.fioai), 1.1*max(world3.fioai)]],
+        [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx, world3.fioai],
+        ["NRFR", "IOPC", "FPC", "POP", "PPOLX", "FIOAI"],
+        [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32], [-0.1, 1.1]],
             figsize=(7, 5),
+            img_background="./img/fig7-7.png",
             grid=1,
             title=title_name,
         )
@@ -57,10 +58,10 @@ def icor_control(t, world3, k):
 
 
 def fioai_control(t, world3, k):
-    ref=0.4
-    P=0.95
+    ref=0.58
+    P=0.8
     if (ref-world3.fioai[k])*P<0:
-        return 0.1
+        return 0.01
     else:
         if (ref-world3.fioai[k])*P <=1:
             return(ref-world3.fioai[k])*P
