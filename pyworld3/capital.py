@@ -189,6 +189,7 @@ class Capital:
             "fioac_control": lambda _: 0.43,
             "isopc_control": lambda _: 1.0,
             "fioas_control": lambda _: 1.0,
+            "fioai_control": lambda _: 1,
         }
         _create_control_function(self, default_control_functions, control_functions)
 
@@ -516,6 +517,7 @@ class Capital:
         From step k requires: LUFD
         """
         self.cuf[k] = self.cuf_f(self.lufd[k])
+        #self.cuf[k] = 1
 
     @requires(["ic"])
     def _update_state_ic(self, k, j, jk):
@@ -648,7 +650,8 @@ class Capital:
         """
         From step k requires: FIOAA FIOAS FIOAC
         """
-        self.fioai[k] = 1 - self.fioaa[k] - self.fioas[k] - self.fioac[k]
+        #self.fioai[k] = 1 - self.fioaa[k] - self.fioas[k] - self.fioac[k]
+        self.fioai[k] = self.fioai_control(k)
 
     @requires(["icir"], ["io", "fioai"])
     def _update_icir(self, k, kl):
