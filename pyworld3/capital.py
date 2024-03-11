@@ -189,7 +189,7 @@ class Capital:
             "fioac_control": lambda _: 0.43,
             "isopc_control": lambda _: 1.0,
             "fioas_control": lambda _: 1.0,
-            "fioai_control": lambda _: 1,
+            "fioai_control": lambda _: 0.01,
         }
         _create_control_function(self, default_control_functions, control_functions)
 
