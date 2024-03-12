@@ -81,8 +81,8 @@ def icor_control(t, world3, k):
 
 def fioai_control(t, world3, k):
     """control function for fioai using the PID_controller class"""
-    P = Pid_controller(world3.dt, 0.5, 0, 1)
-    val = P.__update__(0.5,world3.fioai[k])
+    P = Pid_controller(world3.dt, 0.8, 2, 0.3)
+    val = P.update(1, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
     return clipped_val
 
