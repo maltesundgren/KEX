@@ -8,7 +8,7 @@ class Pid_controller:
         self.e = e0
 
     def update(self, ref, val, old_val):
-        """ 'val' means FIOAI[k] and 'old_val' means FIOAI[k-1] """
+        """ 'val' means the current value of FIOAI[k] and 'old_val' means FIOAI[k-1] """
         wind_up_min = -0.1
         wind_up_max = 0.5
         e_new = ref-val
