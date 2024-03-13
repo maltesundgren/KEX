@@ -65,15 +65,15 @@ def clip_func(x, x1,x2):
     else:
         return x
     
-P = None
+PID = None
 
 def fioai_control(t, world3, k):
     """control function for fioai using the PID_controller class"""
-    global P
-    if P == None: 
-        P = Pid_controller(world3.dt, 0.5, 0.3, 3)
+    global PID
+    if PID == None: 
+        PID = Pid_controller(world3.dt, 0.5, 0.3, 3)
         
-    val = P.update(0.5, world3.fioai[k], world3.fioai[k-1])
+    val = PID.update(0.5, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
     return clipped_val
 
