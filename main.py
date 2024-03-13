@@ -71,13 +71,19 @@ def fioai_control(t, world3, k):
     """control function for fioai using the PID_controller class"""
     global PID
     if PID == None: 
-        PID = Pid_controller(world3.dt, 0.5, 0.3, 3)
+        PID = Pid_controller(world3.dt, 0.2, 0.4 , 0.066)
         
     val = PID.update(0.5, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
     return clipped_val
 
+# Ku = 1
+# Tu = 1 year
 
+# Classic PID
+# Kp = 0.6 * Ku         = 0.6
+# Ki = 1.2 * Ku/Tu      = 1.2
+# Kd = 0.075 * Ku * Tu  = 0.075
 
 def example1():
     # Business as usual
