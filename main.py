@@ -14,9 +14,9 @@ def simulation(world3,title_name):
         #[world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx, world3.fioai],
         #["NRFR", "IOPC", "FPC", "POP", "PPOLX", "FIOAI"],
         #[[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32], [-0.1, 1.1]],
-        [world3.fioai],
-        ["FIOAI"],
-        [[-0.1, 1.1]],
+        [world3.fcaor, world3.io],
+        ["FCAOR", "IO"],
+        [[-0.1, 1.1], [0, 3e12]],
         figsize=(7, 5),
         #img_background="./img/fig7-7.png",
         grid=1,
@@ -69,11 +69,14 @@ PID = None
 
 def fioai_control(t, world3, k):
     """control function for fioai using the PID_controller class"""
+    if t <= 1950:
+        return 1 - world3.fioaa[k] - world3.fioas[k] - world3.fioac[k]
+
     global PID
     if PID == None: 
         PID = Pid_controller(world3.dt, 0.2, 0.4 , 0.066)
         
-    val = PID.update(0.5, world3.fioai[k], world3.fioai[k-1])
+    val = PID.update(0.2, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
     return clipped_val
 
@@ -93,7 +96,7 @@ def example1():
 def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()                                      # choose the time limits and step.
-    world3.set_world3_control(fioai_control=fioai_control)          # choose your controls
+    world3.set_world3_control()                                     # choose your controls
     world3.init_world3_constants()                                  # choose the model constants. pet=1950 caps value of population
     world3.init_world3_variables()                                  # initialize all variables.
     world3.set_world3_table_functions()                             # get tables from a json file.
@@ -103,7 +106,7 @@ def example2():
     #iopc = np.linspace(1,1600)
     #plt.plot(iopc, world3.pcrum_f(iopc))
     #plt.show()
-    print(world3.fioai[-1])
+    print(max(world3.io))
     simulation(world3, "Tuning the pollution sector")
 
 
