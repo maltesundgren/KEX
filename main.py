@@ -24,29 +24,6 @@ def simulation(world3,title_name):
     plt.show()
 
 
-
-def example1():
-    # Business as usual
-    pyworld3.hello_world3()
-
-def pid_controller(world3, k, r, val, u, Kp, Ki, Kd):
-    err = np.full(3, np.nan)
-    err[k] = r-val[k]
-    err[k-1] = r-val[k-1]
-    err[k-2] = r-val[k-2]
-
-    u[k] = u[k-1] + Kp*(e[k]-e[k-1]) + Ki*world3.dt*e[k] + (Kd*(e[k]-2*e[k-1]+e[k-2]))/world3.dt    
-
-def clip_func(x, x1,x2):
-    """function that saturates the output to be y1 if less than x1 and y2 if more than x2"""
-    if x<x1:
-        return x1
-    elif x>x2:
-        return x2
-    else:
-        return x
-
-
 def ppgf_control(t, world3, k):
     #if world3.ppolx[k] <= 1.5:
     #    return 1
@@ -79,25 +56,44 @@ def icor_control(t, world3, k):
     return 1 - world3.fcaor[k]
 
 
+def clip_func(x, x1,x2):
+    """function that saturates the output to be y1 if less than x1 and y2 if more than x2"""
+    if x<x1:
+        return x1
+    elif x>x2:
+        return x2
+    else:
+        return x
+    
+P = None
+
 def fioai_control(t, world3, k):
     """control function for fioai using the PID_controller class"""
-    P = Pid_controller(world3.dt, 0.8, 2, 0.3)
-    val = P.update(1, world3.fioai[k], world3.fioai[k-1])
+    global P
+    if P == None: 
+        P = Pid_controller(world3.dt, 0.5, 0.3, 3)
+        
+    val = P.update(0.5, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
     return clipped_val
 
 
+
+def example1():
+    # Business as usual
+    pyworld3.hello_world3()
     
 
 def example2():
     # Tuning the simulation
-    world3 = pyworld3.World3()           # choose the time limits and step.
+    world3 = pyworld3.World3()                                      # choose the time limits and step.
     world3.set_world3_control(fioai_control=fioai_control)          # choose your controls
-    world3.init_world3_constants()       # choose the model constants. pet=1950 caps value of population
-    world3.init_world3_variables()       # initialize all variables.
-    world3.set_world3_table_functions()  # get tables from a json file.
-    world3.set_world3_delay_functions()  # initialize delay functions.
+    world3.init_world3_constants()                                  # choose the model constants. pet=1950 caps value of population
+    world3.init_world3_variables()                                  # initialize all variables.
+    world3.set_world3_table_functions()                             # get tables from a json file.
+    world3.set_world3_delay_functions()                             # initialize delay functions.
     world3.run_world3()
+    
     #iopc = np.linspace(1,1600)
     #plt.plot(iopc, world3.pcrum_f(iopc))
     #plt.show()
@@ -106,10 +102,10 @@ def example2():
 
 
 
-
 if __name__ == "__main__":
     #example1()
     example2()
+    #example3()
 
 
 
