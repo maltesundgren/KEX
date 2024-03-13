@@ -1,1 +1,10 @@
-(fioai_control=fioai_control
+        # Plot results
+        plt.figure(figsize=(10, 6))
+        plt.plot(t_sim, ref_signal, label='Reference Signal')
+        plt.plot(t_sim, y_history, label='System Output')
+        plt.xlabel('Time (s)')
+        plt.ylabel('Output')
+        plt.title('PID Control of a First-Order System with Step Signal')
+        plt.grid(True)
+        plt.legend()
+        plt.show()
