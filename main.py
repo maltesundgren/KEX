@@ -14,9 +14,9 @@ def simulation(world3,title_name):
         #[world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx, world3.fioai],
         #["NRFR", "IOPC", "FPC", "POP", "PPOLX", "FIOAI"],
         #[[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32], [-0.1, 1.1]],
-        [world3.fcaor, world3.io],
-        ["FCAOR", "IO"],
-        [[-0.1, 1.1], [0, 3e12]],
+        [world3.fioaa, world3.io, world3.pop, world3.pcrum],
+        ["FIOAA", "IO", "POP", "PCRUM"],
+        [[-0.1, 1.1], [0, 1.1*max(world3.io)], [0, 16e9], [0, 1.1*max(world3.pcrum)]],
         figsize=(7, 5),
         #img_background="./img/fig7-7.png",
         grid=1,
@@ -65,7 +65,8 @@ def clip_func(x, x1,x2):
     else:
         return x
     
-PID = None
+PID_f = None
+PID_i = None
 
 def fioai_control(t, world3, k):
     """control function for fioai using the PID_controller class"""
@@ -78,6 +79,39 @@ def fioai_control(t, world3, k):
         
     val = PID.update(0.2, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
+    return clipped_val
+
+
+def nruf_control(t, world3, k):
+    """control function for fcaor using the PID_controller class"""
+    global PID
+    if PID == None:
+        PID = Pid_controller(world3.dt, 0.2, 0.4, 0.066)
+    
+    val = PID.update(1, world3.nrfr[k])
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+
+def fioaa_control(t, world3, k):
+    """control function for fcaor using the PID_controller class"""
+    global PID_f
+    if PID_f == None:
+        PID_f = Pid_controller(world3.dt, 0.2, 0.4, 0.066)
+    
+    val = PID_f.update(0.6, world3.fioai[k])
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+
+def ifpc_control(t, world3, k):
+    """control function for fcaor using the PID_controller class"""
+    global PID_i
+    if PID_i == None:
+        PID_i = Pid_controller(world3.dt, 0.2, 0.4, 0.066)
+    
+    val = PID_i.update(0.6, world3.fioai[k])
+    clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
 
 # Ku = 1
@@ -96,7 +130,7 @@ def example1():
 def example2():
     # Tuning the simulation
     world3 = pyworld3.World3()                                      # choose the time limits and step.
-    world3.set_world3_control()                                     # choose your controls
+    world3.set_world3_control(fioaa_control=fioaa_control,ifpc_control=ifpc_control)                                     # choose your controls
     world3.init_world3_constants()                                  # choose the model constants. pet=1950 caps value of population
     world3.init_world3_variables()                                  # initialize all variables.
     world3.set_world3_table_functions()                             # get tables from a json file.

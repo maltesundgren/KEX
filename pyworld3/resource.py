@@ -114,7 +114,7 @@ class Resource:
         Define the control commands. Their units are documented above at the class level.
         """
         default_control_functions = {
-            "nruf_control": lambda _: 1,
+            "nruf_control": lambda _: 0,
             "fcaor_control": lambda _: 1,
         }
         _create_control_function(self, default_control_functions, control_functions)

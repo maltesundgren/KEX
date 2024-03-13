@@ -244,7 +244,6 @@ class Agriculture:
             "lymap_control": lambda _: 1,
             "llmy_control": lambda _: 1,
             "fioaa_control": lambda _: 1,
-            #"al_control": lambda _:9e9
         }
         _create_control_function(self, default_control_functions, control_functions)
 
@@ -664,8 +663,7 @@ class Agriculture:
         """
         self.fioaa_control_values[k] = max(0, self.fioaa_control(k))
         self.fioaa[k] = self.fioaa_control_values[k] * self.fioaa_f(
-            self.fpc[k] / self.ifpc[k]
-        )
+            self.fpc[k] / self.ifpc[k])
 
     @requires(["ldr"], ["tai", "fiald", "dcph"])
     def _update_ldr(self, k, kl):
