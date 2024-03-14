@@ -7,7 +7,7 @@ class Pid_controller:
         self.int = 0
         self.e = e0
 
-    def update(self, ref, val, wind_up_min = -100, wind_up_max = 100):
+    def update(self, ref, val, wind_up_min = -1000, wind_up_max = 1000):
         """ 'val' means the current value of FIOAI[k] and 'old_val' means FIOAI[k-1] """
         e_new = ref-val
         self.int = self.int + self.dt*e_new
