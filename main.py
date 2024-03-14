@@ -75,7 +75,7 @@ def fioai_control(t, world3, k):
 
     global PID
     if PID == None: 
-        PID = Pid_controller(world3.dt, 0.2, 0.4 , 0.066)
+        PID = Pid_controller(world3.dt, 0.2, 0.4, 0.066)
         
     val = PID.update(0.2, world3.fioai[k], world3.fioai[k-1])
     clipped_val = clip_func(val, 0.01,1)
