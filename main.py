@@ -14,9 +14,9 @@ def clip_func(x, x1,x2):
     else:
         return x
   
-
+""" FOR EXAMPLE"
 def fioaa_control(t, world3, k):
-    """Control function for fioai using the PID_controller class"""
+    #Control function for fioai using the PID_controller class
     if not hasattr(fioaa_control, 'pid'):
         fioaa_control.pid = Pid_controller(world3.dt, 1, 0, 0)
         
@@ -25,7 +25,7 @@ def fioaa_control(t, world3, k):
     return clipped_val
 
 def fioas_control(t, world3, k):
-    """Control function for fioai using the PID_controller class"""
+    #Control function for fioai using the PID_controller class
     if not hasattr(fioas_control, 'pid'):
         fioas_control.pid = Pid_controller(world3.dt, 1, 0, 0)
         
@@ -34,14 +34,14 @@ def fioas_control(t, world3, k):
     return clipped_val
 
 def fioac_control(t, world3, k):
-    """Control function for fioai using the PID_controller class"""
+    #Control function for fioai using the PID_controller class
     if not hasattr(fioac_control, 'pid'):
         fioac_control.pid = Pid_controller(world3.dt, 0.5, 0, 0)
         
     val = fioac_control.pid.update((world3.io[k]/1e12),1)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
-
+"""
 
 
 
@@ -128,10 +128,66 @@ def example4():
         title='FCAOR control')
     plt.show()
 
+def fioaa_control(t, world3, k):
+    # fioaa control with feeback value being fioai
+    if not hasattr(fioaa_control, 'pid'):
+        fioaa_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
+        
+    val = fioaa_control.pid.update(world3.fioai[k], fioai_ref)
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+def fioac_control(t, world3, k):
+    # fioac control with feedback value being fioai
+    if not hasattr(fioac_control, 'pid'):
+        fioac_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
+        
+    val = fioac_control.pid.update(world3.fioai[k], fioai_ref)
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+def fioas_control(t, world3, k):
+    # fioac control with feedback value being fioai
+    if not hasattr(fioas_control, 'pid'):
+        fioas_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
+        
+    val = fioas_control.pid.update(world3.fioai[k], fioai_ref)
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+def fioai_ref_control(world3, k):
+    # outer loop for setting reference value for fioai to use for fioaa, fioas and fioac
+    pass
+
+def example5():
+    # Trying to control fioai by fioaa, fioas and fioac.
+    global fioai_ref
+    fioai_ref=0.5
+    world3 = pyworld3.World3(year_max=2500) 
+    #fioai_ref = lambda k: (0.5 if k <= 1 else fioai_ref_control(world3.time[k], world3, k - 1))                                    
+    world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
+    world3.init_world3_constants()                                 
+    world3.init_world3_variables()                              
+    world3.set_world3_table_functions()                             
+    world3.set_world3_delay_functions()                             
+    world3.run_world3()
+
+    plot_world_variables(
+        world3.time,
+        [world3.fioai, world3.fioaa, world3.fioas, world3.fioac],
+        ["FIOAI", "FIOAA", "FIOAS", "FIOAC"],
+        [[-0.1, 1.1], [-0.1, 1.1], [-0.1, 1.1], [-0.1, 1.1] ],
+        figsize=(7, 5),
+        #img_background="./img/fig7-7.png",
+        grid=1,
+        title='FIO SIGNALS trying to control fioai')
+    plt.show()
+
 if __name__ == "__main__":
     #example1()
     #example2()
     #example3()
-    example4()
+    #example4()
+    example5()
 
 
