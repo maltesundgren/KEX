@@ -6,6 +6,7 @@ class Pid_controller:
         self.Kd = Kd
         self.int = 0
         self.e = e0
+        self.val = 0
 
     def update(self, ref, val, wind_up_min = -1000, wind_up_max = 1000):
         """ 'val' means the current value of FIOAI[k] and 'old_val' means FIOAI[k-1] """
@@ -15,8 +16,8 @@ class Pid_controller:
         
         dy = (e_new - self.e)/self.dt
         self.e = e_new
-        return self.Kp*e_new + self.Ki*self.int + self.Kd*dy # PID regulator
-    
+        self.val = self.Kp*e_new + self.Ki*self.int + self.Kd*dy # PID regulator
+        return self.val
     
     
 def clip_func(x, x1,x2):

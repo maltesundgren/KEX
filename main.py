@@ -128,22 +128,14 @@ def example4():
         title='FCAOR control')
     plt.show()
 
-def fioai_ref_control(world3, k):
-    # outer loop for setting reference value for fioai to use for fioaa, fioas and fioac
-    if not hasattr(fioai_control, 'pid'):
-        fioai_control = Pid_controller(world3.dt, 0.5, 0.1, 0)
-    
-    #val fioai_control.update(2, (world3.io[k]/1e12))
-    clipped_val = clip_func(val, 0.01, 1)
-    return clipped_val
-
-
+"""
 def fioaa_control(t, world3, k):
     # fioaa control with feeback value being fioai
     if not hasattr(fioaa_control, 'pid'):
         fioaa_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
         
-    val = fioaa_control.pid.update(world3.fioai[k], fioai_ref)
+    #fioai_ref.update(2, (world3.io[k]/1e12)) 
+    val = fioaa_control.pid.update(world3.fioai[k], fioai_ref.val)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
 
@@ -152,29 +144,30 @@ def fioac_control(t, world3, k):
     # fioac control with feedback value being fioai
     if not hasattr(fioac_control, 'pid'):
         fioac_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
-        
-    val = fioac_control.pid.update(world3.fioai[k], fioai_ref)
+
+    fioai_ref.update(0.5, (world3.io[k]/1e12))   
+    val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
 
 
 def fioas_control(t, world3, k):
     # fioac control with feedback value being fioai
-    #fioai_ref = fioai_ref_control(world3, k)
-
     if not hasattr(fioas_control, 'pid'):
         fioas_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
-        
-    val = fioas_control.pid.update(world3.fioai[k], fioai_ref)
+
+    #fioai_ref.update(2, (world3.io[k]/1e12))   
+    val = fioas_control.pid.update(world3.fioai[k], fioai_ref.val)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
-
+"""
 
 def example5():
     # Trying to control fioai by fioaa, fioas and fioac.
     global fioai_ref
-    fioai_ref = 0.2
+    #fioai_ref = 0.2
     world3 = pyworld3.World3(year_max=2500) 
+    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
     #fioai_ref = lambda k: (0.5 if k <= 1 else fioai_ref_control(world3.time[k], world3, k - 1))                                    
     world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
     world3.init_world3_constants()                                 
@@ -185,20 +178,94 @@ def example5():
 
     plot_world_variables(
         world3.time,
-        [world3.fioai, world3.fioaa, world3.fioas, world3.fioac],
-        ["FIOAI", "FIOAA", "FIOAS", "FIOAC"],
-        [[-0.1, 1.1], [-0.1, 1.1], [-0.1, 1.1], [-0.1, 1.1]],
+        [world3.fioai, (world3.io/1e12), world3.pop],
+        ["FIOAI", "IO", "POP"],
+        [[-0.1, 1.1], [0, 2], [0, 16e9]],
         figsize=(7, 5),
         #img_background="./img/fig7-7.png",
         grid=1,
-        title='FIO SIGNALS trying to control fioai')
+        title='Cascade control for IO')
     plt.show()
+
+
+
+# EXAMPLE 6
+def fioac_control(t, world3, k):
+    # fioac control with feedback value being fioai
+    if not hasattr(fioac_control, 'pid'):
+        fioac_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
+
+    if t<=policy_year:
+        return 0.43
+
+    io_ref.update(2.2, (world3.fpc[k]/100))
+    fioai_ref.update(io_ref.val, (world3.io[k]/1e12))   
+    val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val)
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+
+def fioas_control(t, world3, k):
+    # fioac control with feedback value being fioai
+    if not hasattr(fioas_control, 'pid'):
+        fioas_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
+   
+    if t<=policy_year:
+        return 1
+
+    val = fioas_control.pid.update(world3.fioai[k], fioai_ref.val)
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+
+def fioaa_control(t, world3, k):
+    # fioaa control with feeback value being fioai
+    if not hasattr(fioaa_control, 'pid'):
+        fioaa_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
+
+    if t<=policy_year:
+        return 1
+    val = fioaa_control.pid.update(world3.fioai[k], fioai_ref.val)
+    clipped_val = clip_func(val, 0.01, 1)
+    return clipped_val
+
+
+def example6():
+    # Trying to control fioai by fioaa, fioas and fioac.
+    global fioai_ref
+    global io_ref
+    global policy_year
+
+    policy_year = 1950
+    world3 = pyworld3.World3(year_max=2500) 
+    fioai_ref = Pid_controller(world3.dt, 0.5, 0.01, 0)
+    io_ref = Pid_controller(world3.dt, 1, 0.01, 0)    
+
+    world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
+    world3.init_world3_constants()                                 
+    world3.init_world3_variables()                              
+    world3.set_world3_table_functions()                             
+    world3.set_world3_delay_functions()                             
+    world3.run_world3()
+
+    plot_world_variables(
+        world3.time,
+        [world3.fioai, (world3.io), (world3.pop), world3.fpc],
+        ["FIOAI", "IO", "POP", "FPC"],
+        [[-0.1, 1.1], [0, 15e12], [0, 10e9], [0, 1200]],
+        figsize=(7, 5),
+        #img_background="./img/fig7-7.png",
+        grid=1,
+        title='Cascade control for POP by having FPC as reference value')
+    plt.show()
+
 
 if __name__ == "__main__":
     #example1()
     #example2()
     #example3()
     #example4()
-    example5()
+    #example5()
+    example6()
 
 
