@@ -20,6 +20,7 @@ class Pid_controller:
         return self.val
     
     
+    
 def clip_func(x, x1,x2):
     """function that saturates the output to be y1 if less than x1 and y2 if more than x2"""
     if x<x1:

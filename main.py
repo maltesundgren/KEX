@@ -198,7 +198,7 @@ def fioac_control(t, world3, k):
     if t<=policy_year:
         return 0.43
 
-    io_ref.update(2.2, (world3.fpc[k]/100))
+    io_ref.update(fpc_ref, (world3.fpc[k]/100))
     fioai_ref.update(io_ref.val, (world3.io[k]/1e12))   
     val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val)
     clipped_val = clip_func(val, 0.01, 1)
@@ -230,16 +230,19 @@ def fioaa_control(t, world3, k):
     return clipped_val
 
 
+
 def example6():
     # Trying to control fioai by fioaa, fioas and fioac.
     global fioai_ref
     global io_ref
     global policy_year
+    global fpc_ref
 
     policy_year = 1950
-    world3 = pyworld3.World3(year_max=2500) 
+    fpc_ref = 400
+    world3 = pyworld3.World3(year_max=2100) 
     fioai_ref = Pid_controller(world3.dt, 0.5, 0.01, 0)
-    io_ref = Pid_controller(world3.dt, 1, 0.01, 0)    
+    io_ref = Pid_controller(world3.dt, 1, 0.01, 0)
 
     world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
     world3.init_world3_constants()                                 
@@ -250,11 +253,11 @@ def example6():
 
     plot_world_variables(
         world3.time,
-        [world3.fioai, (world3.io), (world3.pop), world3.fpc],
-        ["FIOAI", "IO", "POP", "FPC"],
-        [[-0.1, 1.1], [0, 15e12], [0, 10e9], [0, 1200]],
+        [world3.fioai, (world3.iopc), (world3.pop), world3.fpc, world3.ppolx, world3.nrfr],
+        ["FIOAI", "IOPC", "POP", "FPC", "PPOLX", "NRFR"],
+        [[-0.1, 1.1], [0, 1000], [0, 16e9], [0, 1000], [0,32], [0, 1]],
         figsize=(7, 5),
-        #img_background="./img/fig7-7.png",
+        img_background="./img/fig7-7.png",
         grid=1,
         title='Cascade control for POP by having FPC as reference value')
     plt.show()
