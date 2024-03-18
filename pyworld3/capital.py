@@ -650,8 +650,8 @@ class Capital:
         """
         From step k requires: FIOAA FIOAS FIOAC
         """
-        self.fioai[k] = 1 - self.fioaa[k] - self.fioas[k] - self.fioac[k]
-        #self.fioai[k] = self.fioai_control(k)
+        #self.fioai[k] = 1 - self.fioaa[k] - self.fioas[k] - self.fioac[k]
+        self.fioai[k] = self.fioai_control(k)
 
     @requires(["icir"], ["io", "fioai"])
     def _update_icir(self, k, kl):
