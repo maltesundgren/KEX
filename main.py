@@ -253,9 +253,9 @@ def example6():
 
     plot_world_variables(
         world3.time,
-        [world3.fioai, (world3.iopc), (world3.pop), world3.fpc, world3.ppolx, world3.nrfr],
-        ["FIOAI", "IOPC", "POP", "FPC", "PPOLX", "NRFR"],
-        [[-0.1, 1.1], [0, 1000], [0, 16e9], [0, 1000], [0,32], [0, 1]],
+        [world3.fioai, (world3.iopc), (world3.pop), world3.fpc, world3.ppolx, world3.nrfr, world3.scir],
+        ["FIOAI", "IOPC", "POP", "FPC", "PPOLX", "NRFR", "scir"],
+        [[-0.1, 1.1], [0, 1000], [0, 16e9], [0, 1000], [0,32], [0, 1], [0, 1e12]],
         figsize=(7, 5),
         img_background="./img/fig7-7.png",
         grid=1,
