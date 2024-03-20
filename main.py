@@ -25,7 +25,7 @@ def fioac_control(t, world3, k):
     
     clipped_val = clip_func(fioai_ref.val, 0.01, 1)
     
-    return 1 - clipped_val/3
+    return (1 - clipped_val)/3
 
 
 def fioas_control(t, world3, k):
@@ -35,9 +35,9 @@ def fioas_control(t, world3, k):
 
     fioai_ref.update(io_ref, (world3.io[k]/1e12))
     
-    clipped_val = clip_func(fioai_ref.val, 0.01, 1)
+    clipped_val = clip_func(fioai_ref.val, 0.01, (1/0.3))
     
-    return 1 - clipped_val/3
+    return (1 - clipped_val)/3
 
 
 def fioaa_control(t, world3, k):
@@ -47,9 +47,9 @@ def fioaa_control(t, world3, k):
 
     fioai_ref.update(io_ref, (world3.io[k]/1e12))
     
-    clipped_val = clip_func(fioai_ref.val, 0.01, 1)
+    clipped_val = clip_func(fioai_ref.val, 0.01, (1/0.4))
     
-    return 1 - clipped_val/3
+    return (1 - clipped_val)/3
 
 
 def example6():
@@ -60,7 +60,7 @@ def example6():
 
     policy_year = 1900
     world3 = pyworld3.World3(year_max=2100) 
-    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
+    fioai_ref = Pid_controller(world3.dt, 4, 0.1, 0)
     io_ref = 0.5
 
     world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
@@ -75,13 +75,13 @@ def example6():
 
     plot_world_variables(
         world3.time,
-        [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx],
-        ["NRFR", "IOPC", "FPC", "POP", "PPOLX"],
-        [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32]],
+        [world3.fioai, world3.fioaa, world3.fioas, world3.fioac, world3.io/1e12, world3.sopc/world3.isopc, world3.fpc/world3.ifpc],
+        ["FIOAI", "FIOAA", "FIOAS", "FIOAC", "IO", "SOPC/ISOPC", "FPC/IFPC"],
+        [[-0.1, 1.1], [-0.1, 1.1], [-0.1, 1.1], [-0.1, 1.1], [0,5], [0, 2.1], [0, 2.6]],
         figsize=(7, 5),
-        img_background="./img/fig7-7.png",
+        #img_background="./img/fig7-7.png",
         grid=1,
-        title='Cascade control of IO compared to standard run')
+        title='FIO SIGNALS')
     plt.show()
 
 
