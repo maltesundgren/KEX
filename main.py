@@ -202,16 +202,15 @@ def fioac_control(t, world3, k):
 
     if t<=policy_year:
         return 0.43
-
-    desired = 0.4
+    
+    desired = 0.5
     current = world3.fioac[k]
     scaling_factor = (desired - current)/desired
     
-    fioac_ref = fioai_ref.update(io_ref, (world3.io[k]/1e12))
-    new_fiaoc_ref = fioac_ref.val* (1 - scaling_factor)
+    fioai_ref.update(io_ref, (world3.io[k]/1e12))
+    new_fioac_ref = fioai_ref.val * (1 - scaling_factor)
     
-    
-    val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val)
+    val = fioac_control.pid.update(world3.fioai[k], new_fioac_ref)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
 
@@ -223,9 +222,14 @@ def fioas_control(t, world3, k):
    
     if t<=policy_year:
         return 1
+    
+    desired = 0.3
+    current = world3.fioas[k]
+    scaling_factor = (desired - current) / desired
+    new_fioas_ref = fioai_ref.val * (1 + scaling_factor)
+    
 
-
-    val = fioas_control.pid.update(world3.fioai[k], fioai_ref.val)
+    val = fioas_control.pid.update(world3.fioai[k], new_fioas_ref)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
 
@@ -237,7 +241,11 @@ def fioaa_control(t, world3, k):
 
     if t<=policy_year:
         return 1
-    val = fioaa_control.pid.update(world3.fioai[k], fioai_ref.val)
+    
+    fioaa_ref = fioai_ref.val
+    new_fioaa_ref = fioaa_ref - new_fioac_ref - new_fioas_ref
+    
+    val = fioaa_control.pid.update(world3.fioai[k], new_fioaa_ref)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
 
@@ -248,18 +256,19 @@ def example6():
     global policy_year
     global io_ref
     global fioai_ref
-    global new_fiaoc_ref
+    global new_fioac_ref
     global new_fioas_ref
     global scaling_factor
     
     policy_year = 1900
+    world3 = pyworld3.World3(year_max=2500)
+    
     io_ref = 0.5
     fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
     new_fioac_ref = 1
     new_fioas_ref = 1
     scaling_factor = 1
     
-    world3 = pyworld3.World3(year_max=2500)
     world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
