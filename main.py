@@ -165,6 +165,11 @@ def fioas_control(t, world3, k):
 def example5():
     # Trying to control fioai by fioaa, fioas and fioac.
     global fioai_ref
+    global policy_year
+    global io_ref
+    
+    io_ref = 0.5
+    policy_year = 1900
     #fioai_ref = 0.2
     world3 = pyworld3.World3(year_max=2500) 
     fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
@@ -193,13 +198,19 @@ def example5():
 def fioac_control(t, world3, k):
     # fioac control with feedback value being fioai
     if not hasattr(fioac_control, 'pid'):
-        fioac_control.pid = Pid_controller(world3.dt, 0.3, 0.1, 0)
+        fioac_control.pid = Pid_controller(world3.dt, 0.3, 0.2, 0.5)
 
     if t<=policy_year:
         return 0.43
 
-    #io_ref.update(fpc_ref, (world3.fpc[k]/100))
-    fioai_ref.update(io_ref, (world3.io[k]/1e12))   
+    desired = 0.4
+    current = world3.fioac[k]
+    scaling_factor = (desired - current)/desired
+    
+    fioac_ref = fioai_ref.update(io_ref, (world3.io[k]/1e12))
+    new_fiaoc_ref = fioac_ref.val* (1 - scaling_factor)
+    
+    
     val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val)
     clipped_val = clip_func(val, 0.01, 1)
     return clipped_val
@@ -212,6 +223,7 @@ def fioas_control(t, world3, k):
    
     if t<=policy_year:
         return 1
+
 
     val = fioas_control.pid.update(world3.fioai[k], fioai_ref.val)
     clipped_val = clip_func(val, 0.01, 1)
@@ -232,15 +244,22 @@ def fioaa_control(t, world3, k):
 
 def example6():
     # Controlling IO with FIOAI as outer loop and FIOAA, FIOAS and FIOAC as inner loop.
-    global fioai_ref
-    global io_ref
+    
     global policy_year
-
+    global io_ref
+    global fioai_ref
+    global new_fiaoc_ref
+    global new_fioas_ref
+    global scaling_factor
+    
     policy_year = 1900
-    world3 = pyworld3.World3(year_max=2100) 
-    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
     io_ref = 0.5
-
+    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
+    new_fioac_ref = 1
+    new_fioas_ref = 1
+    scaling_factor = 1
+    
+    world3 = pyworld3.World3(year_max=2500)
     world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
@@ -253,13 +272,13 @@ def example6():
 
     plot_world_variables(
         world3.time,
-        [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx],
-        ["NRFR", "IOPC", "FPC", "POP", "PPOLX"],
-        [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32]],
+        [world3.fioas, world3.fioac, world3.fioaa, world3.fioai, (world3.io/1e12), world3.pop],
+        ["FIOAS", "FIOAC", "FIOAA", "FIOAI", "IO", "POP"],
+        [[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 16e9]],
         figsize=(7, 5),
-        img_background="./img/fig7-7.png",
+        #img_background="./img/fig7-7.png",
         grid=1,
-        title='Cascade control of IO compared to standard run')
+        title='Cascade control of IO')
     plt.show()
 
 
