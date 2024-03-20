@@ -19,6 +19,8 @@ class Pid_controller:
         self.val = self.Kp*e_new + self.Ki*self.int + self.Kd*dy # PID regulator
         return self.val
     
+    def io_ref(self, world3, k):
+        pass
     
     
 def clip_func(x, x1,x2):
