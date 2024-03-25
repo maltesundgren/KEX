@@ -186,7 +186,7 @@ class Capital:
             "scor_control": lambda _: 1,
             "alic_control": lambda _: 14,
             "alsc_control": lambda _: 20,
-            "fioac_control": lambda _: 0,
+            "fioac_control": lambda _: 0.43,
             "isopc_control": lambda _: 1.0,
             "fioas_control": lambda _: 1.0,
             #"fioai_control": lambda _: 0.01,
