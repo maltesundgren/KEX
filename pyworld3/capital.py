@@ -186,7 +186,7 @@ class Capital:
             "scor_control": lambda _: 1,
             "alic_control": lambda _: 14,
             "alsc_control": lambda _: 20,
-            "fioac_control": lambda _: 0.43,
+            "fioac_control": lambda _: 0,
             "isopc_control": lambda _: 1.0,
             "fioas_control": lambda _: 1.0,
             #"fioai_control": lambda _: 0.01,
@@ -634,7 +634,7 @@ class Capital:
         """
         From step k requires: SOPC ISOPC
         """
-        self.fioas[k] = self.fioas_control(k) * self.fioas_f(self.sopc[k] / self.isopc[k])
+        self.fioas[k] = self.fioas_control(k) * self.fioas_f(self.sopc[k] / self.isopc[k]) 
 
     @requires(["scir"], ["io", "fioas"])
     def _update_scir(self, k, kl):

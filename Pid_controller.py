@@ -8,19 +8,16 @@ class Pid_controller:
         self.e = e0
         self.val = 0
 
-    def update(self, ref, val, wind_up_min = -1000, wind_up_max = 1000):
+    def update(self, ref, val, clip_min = -1000, clip_max = 1000):
         """ 'val' means the current value of FIOAI[k] and 'old_val' means FIOAI[k-1] """
         e_new = ref-val
         self.int = self.int + self.dt*e_new
-        self.int = clip_func(self.int, wind_up_min, wind_up_max)
         
         dy = (e_new - self.e)/self.dt
         self.e = e_new
-        self.val = self.Kp*e_new + self.Ki*self.int + self.Kd*dy # PID regulator
+        val = self.Kp*e_new + self.Ki*self.int + self.Kd*dy # PID regulator
+        self.val = clip_func(val, clip_min, clip_max) # potentially clip the value for saturation
         return self.val
-    
-    def io_ref(self, world3, k):
-        pass
     
     
 def clip_func(x, x1,x2):
