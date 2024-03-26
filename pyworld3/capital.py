@@ -634,7 +634,7 @@ class Capital:
         """
         From step k requires: SOPC ISOPC
         """
-        self.fioas[k] = self.fioas_control(k) * self.fioas_f(self.sopc[k] / self.isopc[k])
+        self.fioas[k] = self.fioas_control(k) * self.fioas_f(self.sopc[k] / self.isopc[k]) 
 
     @requires(["scir"], ["io", "fioas"])
     def _update_scir(self, k, kl):

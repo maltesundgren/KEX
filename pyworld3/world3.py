@@ -468,12 +468,12 @@ def hello_world3():
 
     """
     from .utils import plot_world_variables
-    from matplotlib.pyplot import rcParams, show
+    from matplotlib.pyplot import rcParams, show, savefig
 
-    params = {"lines.linewidth": "3"}
+    params = {"lines.linewidth": "3", 'axes.prop_cycle': cycler(color=['b'])}
     rcParams.update(params)
 
-    world3 = World3()
+    world3 = World3(year_max=2500)
     world3.set_world3_control()
     world3.init_world3_constants()
     world3.init_world3_variables()
@@ -490,7 +490,7 @@ def hello_world3():
         grid=1,
         title="World3 standard run",
     )
-    show()
+    savefig("standard_run.png")
 
 
 if __name__ == "__main__":

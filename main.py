@@ -195,76 +195,50 @@ def example5():
 
 
 # EXAMPLE 6
+def ifpc_control(t, world3, k):
+    # ifpc control with feedback value being tai (total agriculture investments)
+    if not hasattr(ifpc_control, 'pid'):
+        ifpc_control.pid = Pid_controller(world3.dt, 1.5, 0.1, 0)
+    
+    f_ref = 1.8
+    ifpc_control.pid.update(f_ref, (world3.f[k]/1e12))
+    return ifpc_control.pid.val
+
+
 def fioac_control(t, world3, k):
     # fioac control with feedback value being fioai
-    if not hasattr(fioac_control, 'pid'):
-        fioac_control.pid = Pid_controller(world3.dt, 0.3, 0.1, 0)
-
     if t<=policy_year:
         return 0.43
 
-    #io_ref.update(fpc_ref, (world3.fpc[k]/100))
-    fioai_ref.update(io_ref, (world3.io[k]/1e12))   
-    val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val)
-    clipped_val = clip_func(val, 0.01, 1)
-    return clipped_val
+    if not hasattr(fioac_control, 'pid'):
+        fioac_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
 
+    fioai_ref.update(iopc_ref, (world3.iopc[k]/4e2))
 
-def fioas_control(t, world3, k):
-    # fioac control with feedback value being fioai
-    if not hasattr(fioas_control, 'pid'):
-        fioas_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
-   
-    if t<=policy_year:
-        return 1
-    
-    desired = 0.3
-    current = world3.fioas[k]
-    scaling_factor = (desired - current) / desired
-    new_fioas_ref = fioai_ref.val * (1 + scaling_factor)
-    
+    val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val, 0.01, 1) 
+    return val
 
-    val = fioas_control.pid.update(world3.fioai[k], new_fioas_ref)
-    clipped_val = clip_func(val, 0.01, 1)
-    return clipped_val
-
-
-def fioaa_control(t, world3, k):
-    # fioaa control with feeback value being fioai
-    if not hasattr(fioaa_control, 'pid'):
-        fioaa_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 0)
-
-    if t<=policy_year:
-        return 1
-    
-    fioaa_ref = fioai_ref.val
-    new_fioaa_ref = fioaa_ref - new_fioac_ref - new_fioas_ref
-    
-    val = fioaa_control.pid.update(world3.fioai[k], new_fioaa_ref)
-    clipped_val = clip_func(val, 0.01, 1)
-    return clipped_val
 
 
 def example6():
     # Controlling IO with FIOAI as outer loop and FIOAA, FIOAS and FIOAC as inner loop.
     global fioai_ref
-    global io_ref
+    global iopc_ref
     global policy_year
 
-    policy_year = 1900
-    world3 = pyworld3.World3(year_max=2100) 
-    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
-    io_ref = 0.5
+    policy_year = 1970
+    world3 = pyworld3.World3(year_max=2500) 
+    fioai_ref = Pid_controller(world3.dt, 1.8, 0.01, 5)
+    iopc_ref = 0.25
 
-    world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
+    world3.set_world3_control(fioac_control=fioac_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
     world3.set_world3_table_functions()                             
     world3.set_world3_delay_functions()                             
     world3.run_world3()
 
-
-    print(world3.io[-1])
+    print(max(world3.pop))
 
     plot_world_variables(
         world3.time,
@@ -272,33 +246,30 @@ def example6():
         ["NRFR", "IOPC", "FPC", "POP", "PPOLX"],
         [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32]],
         figsize=(7, 5),
-        #img_background="./img/fig7-7.png",
+        img_background="./img/standard_run.jpg",
         grid=1,
-        title='Cascade control of IO compared to standard run')
+        title="World3 standard run",
+    )
     plt.show()
-
-
-
-def example7():
-    # Looking for signals that can control population.
-    world3 = pyworld3.World3(year_max=2500)                                    
-    world3.set_world3_control()                                   
-    world3.init_world3_constants()                                 
-    world3.init_world3_variables()                              
-    world3.set_world3_table_functions()                             
-    world3.set_world3_delay_functions()                             
-    world3.run_world3()
-
+    
+    """
     plot_world_variables(
         world3.time,
-        [world3.fioai, (world3.io/1e12), world3.pop],
-        ["FIOAI", "IO", "POP"],
-        [[-0.1, 1.1], [0, 2], [0, 16e9]],
+        [(world3.iopc/4e2), (world3.io/1e12), (world3.nrfr), world3.pop],
+        ["IOPC", "IO", "NRFR", "POP"],
+        [[0, 1.1*max(world3.iopc/4e2)], [0, 2], [0, 1.1], [0, 16e9]],
         figsize=(7, 5),
         #img_background="./img/fig7-7.png",
         grid=1,
-        title='Looking for ways to contorl pop')
+        title='Cascade control for IOPC')
     plt.show()
+    """
+    
+    """x_values = np.linspace(0, 1600)
+    plt.plot(x_values, world3.pcrum_f(x_values))
+    plt.show()"""
+    
+
 
 
 if __name__ == "__main__":
@@ -308,6 +279,5 @@ if __name__ == "__main__":
     #example4()
     #example5()
     example6()
-    #example7()
 
 

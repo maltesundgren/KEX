@@ -662,8 +662,7 @@ class Agriculture:
         From step k requires: FPC IFPC
         """
         self.fioaa_control_values[k] = max(0, self.fioaa_control(k))
-        self.fioaa[k] = self.fioaa_control_values[k] * self.fioaa_f(
-            self.fpc[k] / self.ifpc[k])
+        self.fioaa[k] = self.fioaa_control_values[k] * self.fioaa_f(self.fpc[k] / self.ifpc[k]) 
 
     @requires(["ldr"], ["tai", "fiald", "dcph"])
     def _update_ldr(self, k, kl):
