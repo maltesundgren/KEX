@@ -221,7 +221,7 @@ def example6():
     global iopc_ref
     global policy_year
 
-    policy_year = 1970
+    policy_year = 1899
     world3 = pyworld3.World3(year_max=2500) 
     fioai_ref = Pid_controller(world3.dt, 1.8, 0.01, 5)
     iopc_ref = 0.25
@@ -235,6 +235,7 @@ def example6():
 
     print(max(world3.pop))
 
+    """
     plot_world_variables(
         world3.time,
         [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx],
@@ -246,19 +247,19 @@ def example6():
         title="World3 standard run",
     )
     plt.show()
-    
     """
+    
     plot_world_variables(
         world3.time,
-        [(world3.iopc/4e2), (world3.io/1e12), (world3.nrfr), world3.pop],
-        ["IOPC", "IO", "NRFR", "POP"],
-        [[0, 1.1*max(world3.iopc/4e2)], [0, 2], [0, 1.1], [0, 16e9]],
+        [(world3.iopc), (world3.io/1e12), (world3.nrfr), world3.pop, world3.sopc],
+        ["IOPC", "IO", "NRFR", "POP", "SOPC"],
+        [[0, 1.1*max(world3.iopc)], [0, 2], [0, 1.1], [0, 16e9], [0, 1.1*max(world3.sopc)]],
         figsize=(7, 5),
         #img_background="./img/fig7-7.png",
         grid=1,
         title='Cascade control for IOPC')
     plt.show()
-    """
+
     
     """x_values = np.linspace(0, 1600)
     plt.plot(x_values, world3.pcrum_f(x_values))
