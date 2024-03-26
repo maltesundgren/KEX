@@ -18,14 +18,15 @@ world3.run_world3(fast=False)
 
 plot_world_variables(
     world3.time,
-    [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx],
-    ["NRFR", "IOPC", "FPC", "POP", "PPOLX"],
-    [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32]],
+    [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx, world3.f],
+    ["NRFR", "IOPC", "FPC", "POP", "PPOLX", "F"],
+    [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 32], [0, 1.1*max(world3.f)]],
     img_background="./img/fig7-7.png",
     figsize=(7, 5),
     title="World3 standard run - General",
 )
 plt.savefig("fig_world3_standard_general.pdf")
+
 
 plot_world_variables(
     world3.time,
