@@ -198,7 +198,7 @@ def example5():
 def ifpc_control(t, world3, k):
     # ifpc control with feedback value     
     if not hasattr(ifpc_control, 'pid'):
-        ifpc_control.pid = Pid_controller(world3.dt, 0.5, 0, 10)
+        ifpc_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 10)
 
     ifpc_control.pid.update(fpc_ref, (world3.fpc[k]/400))
     
@@ -211,7 +211,7 @@ def ifpc_control(t, world3, k):
 def isopc_control(t, world3, k):
     # isopc control with feedback value     
     if not hasattr(isopc_control, 'pid'):
-        isopc_control.pid = Pid_controller(world3.dt, 0.5, 0, 1)
+        isopc_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 1)
              
     
     isopc_control.pid.update(sopc_ref, (world3.sopc[k]/400))
@@ -225,7 +225,7 @@ def isopc_control(t, world3, k):
 def fioac_control(t, world3, k):
     # fioac control with feedback value being fioai
     if not hasattr(fioac_control, 'pid'):
-        fioac_control.pid = Pid_controller(world3.dt, 0.5, 0, 2)
+        fioac_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 2)
 
     fioai_ref.update(iopc_ref, (world3.iopc[k]/4e2))
 
@@ -248,7 +248,7 @@ def example6():
 
     policy_year = 1950
     world3 = pyworld3.World3(year_max=2500) 
-    fioai_ref = Pid_controller(world3.dt, 1.8, 0, 5)
+    fioai_ref = Pid_controller(world3.dt, 1.8, 0.01, 5)
     sopc_ref = 0.5
     iopc_ref = 0.25
     fpc_ref = 0.6
