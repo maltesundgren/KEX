@@ -592,6 +592,7 @@ class Capital:
         """
         From step k requires: IOPC
         """
+        self.isopc_control_values[k] = self.isopc_control(k)
         self.isopc[k] = self.isopc_control(k) * self.isopc_f(self.iopc[k])
 
     @requires(["alsc"])
