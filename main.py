@@ -170,10 +170,8 @@ def example5():
     
     io_ref = 0.5
     policy_year = 1900
-    #fioai_ref = 0.2
     world3 = pyworld3.World3(year_max=2500) 
-    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)
-    #fioai_ref = lambda k: (0.5 if k <= 1 else fioai_ref_control(world3.time[k], world3, k - 1))                                    
+    fioai_ref = Pid_controller(world3.dt, 1, 0.01, 0)                                   
     world3.set_world3_control(fioac_control=fioac_control, fioaa_control=fioaa_control, fioas_control=fioas_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
@@ -203,8 +201,6 @@ def ifpc_control(t, world3, k):
     if not hasattr(ifpc_control, 'pid'):
         ifpc_control.pid = Pid_controller(world3.dt, 15, 0.08, 0)
 
-    #fpc_ref.update(pop_ref, (world3.pop[k]/6e9),(230/400),(460/400))
-
     ifpc_control.pid.update(fpc_ref, (world3.fpc[k]/400),0.01)
     
     values = np.append(world3.ifpc_control_values[(k-10):k], ifpc_control.pid.val)
@@ -219,9 +215,7 @@ def isopc_control(t, world3, k):
         return 1
 
     if not hasattr(isopc_control, 'pid'):
-        isopc_control.pid = Pid_controller(world3.dt, 50, 0.02, 2)
-
-    #sopc_ref.update(pop_ref, (world3.pop[k]/6e9),(100/400), (780/400))         
+        isopc_control.pid = Pid_controller(world3.dt, 50, 0.02, 2)        
     
     isopc_control.pid.update(sopc_ref, (world3.sopc[k]/400), 0.01)
     
@@ -238,12 +232,6 @@ def fioac_control(t, world3, k):
     
     if not hasattr(fioac_control, 'pid'):
         fioac_control.pid = Pid_controller(world3.dt, 20, 0.01, 2)
-
-    #iopc_ref.update(pop_ref, (world3.pop[k]/6e9),(50/400),(216/400))
-    
-    # Tidigare tvåstegsreglering
-    #fioai_ref.update(iopc_ref, (world3.iopc[k]/400))
-    #val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val, 0.01, 1)
 
     val = fioac_control.pid.update((world3.iopc[k]/400), iopc_ref, 0.01, 1)
 
@@ -262,22 +250,14 @@ def example6():
     global policy_year_io
     global policy_year_f
     global policy_year_so
-    global pop_ref
-    global average_num_ele
 
-    average_num_ele = 100
-    pop_ref = 0.5
     policy_year_io = 1950
     policy_year_f = 2050
     policy_year_so = 2300
     world3 = pyworld3.World3(year_max=2500) 
-    #fioai_ref = Pid_controller(world3.dt, 1.5, 0.01, 1)
     sopc_ref = 1
     iopc_ref = 0.2
     fpc_ref = 0.6
-    #iopc_ref = Pid_controller(world3.dt, 0.5, 0.005, 5)
-    #sopc_ref = Pid_controller(world3.dt, 0.5, 0.005, 5)
-    #fpc_ref = Pid_controller(world3.dt, 0.5, 0.005, 5)
 
     world3.set_world3_control(fioac_control=fioac_control, isopc_control=isopc_control, ifpc_control=ifpc_control)                                   
     world3.init_world3_constants()                                 
