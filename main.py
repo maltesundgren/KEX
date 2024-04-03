@@ -7,8 +7,8 @@ from Pid_controller import Pid_controller
 
 
 def ifpc_control(t, world3, k):
-    # ifpc control with feedback value     
-    if t<=policy_year_f:
+    # ifpc control with feedback from FPC normalized with 400    
+    if t<=policy_year_fpc:
         return 1
     
     if not hasattr(ifpc_control, 'pid'):
@@ -22,9 +22,8 @@ def ifpc_control(t, world3, k):
 
 
 def isopc_control(t, world3, k):
-    # isopc control with feedback value     
-    
-    if t<=policy_year_so:
+    # isopc control with feedback from SOPC normalized with 400     
+    if t<=policy_year_sopc:
         return 1
 
     if not hasattr(isopc_control, 'pid'):
@@ -39,8 +38,8 @@ def isopc_control(t, world3, k):
 
 
 def fioac_control(t, world3, k):
-    # fioac control with feedback value being fioai
-    if t<=policy_year_io:
+    # fioac control with feedback from IOPC normalized with 400
+    if t<=policy_year_iopc:
         return 0.43
     
     if not hasattr(fioac_control, 'pid'):
@@ -54,24 +53,23 @@ def fioac_control(t, world3, k):
 
 
 
-def example6():
-    # Controlling IO with FIOAI as outer loop and FIOAA, FIOAS and FIOAC as inner loop.
-    global fioai_ref
+def main():
+    # Controlling POP with policy years and control signals FIOAC, IFPC and ISOPC
     global iopc_ref
     global sopc_ref
     global fpc_ref
-    global policy_year_io
-    global policy_year_f
-    global policy_year_so
+    global policy_year_iopc
+    global policy_year_fpc
+    global policy_year_sopc
 
-    policy_year_io = 1970
-    policy_year_f = 2120
-    policy_year_so = 2130
-    world3 = pyworld3.World3(year_max=2200) 
+    policy_year_iopc = 1970
+    policy_year_fpc = 2120
+    policy_year_sopc = 2130
     sopc_ref = 0.8
     iopc_ref = 0.3
     fpc_ref = 0.7
 
+    world3 = pyworld3.World3(year_max=2200) 
     world3.set_world3_control(fioac_control=fioac_control, isopc_control=isopc_control, ifpc_control=ifpc_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
@@ -79,11 +77,11 @@ def example6():
     world3.set_world3_delay_functions()                             
     world3.run_world3()
 
-    
+    """
     plot_world_variables(
         world3.time,
         [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.sopc],
-        ["NRFR\n[]", "IOPC\n[$/py]", "FPC\n[ve kg/py]", "POP\n[p]", "SOPC\n[$/py]"],
+        ["NRFR", "IOPC", "FPC", "POP", "SOPC"],
         [[0, 1], [0, 1e3], [0, 1e3], [0, 16e9], [0, 1e3]],
         figsize=(7, 5),
         img_background="./img/STD_2200_SOPC.png",
@@ -92,21 +90,67 @@ def example6():
         title="Control of World3 vs standard run",
     )
     plt.savefig("fig_STD_2200.png")
-    
+    """
+    """
+    plot_world_variables(
+        world3.time,
+        [world3.nrfr, world3.iopc, world3.pop],
+        ["NRFR", "IOPC", "POP"],
+        [[0, 1], [0, 1e3], [0, 16e9]],
+        figsize=(7, 5),
+        img_background="./img/NRFR_IOPC_POP_2500.png",
+        grid=1,
+        title="Population of controlled World3 vs standard run",
+    )
+    plt.savefig("fig_STD_2500.png")
+    """
+
+    fpc_ifpc = np.linspace(0, 3)
+    plt.figure("fioaa_f")
+    plt.plot(fpc_ifpc, world3.fioaa_f(fpc_ifpc))
+    plt.xlabel("FPC/IFPC")
+    plt.ylabel("FIOAA")
+    plt.savefig("fioaa_f.png")
+
+    sopc_isopc = np.linspace(0, 2.5)
+    plt.figure("fioas_f")
+    plt.plot(sopc_isopc, world3.fioas_f(sopc_isopc))
+    plt.xlabel("SOPC/ISOPC")
+    plt.ylabel("FIOAS")
+    plt.savefig("fioas_f.png")
+
+    fpc_sfpc = np.linspace(0,6)
+    plt.figure("lmf_f")
+    plt.plot(fpc_sfpc, world3.lmf_f(fpc_sfpc))
+    plt.xlabel("FPC/SFPC")
+    plt.ylabel("LMF")
+    plt.savefig("lmf_f.png")
+
+    sopc = np.linspace(0, 2100)
+    plt.figure("hsapc_f")
+    plt.plot(sopc, world3.hsapc_f(sopc))
+    plt.xlabel("SOPC")
+    plt.ylabel("HSAPC")
+    plt.savefig("hsapc_f.png")
+
+    iopc = np.linspace(0, 1700)
+    plt.figure("cmi_f")
+    plt.plot(iopc, world3.cmi_f(iopc))
+    plt.xlabel("IOPC")
+    plt.ylabel("CMI")
+    plt.savefig("cmi_f.png")
+
 
     
 
+    
+    
     
     
 
 
 
 if __name__ == "__main__":
-    #example1()
-    #example2()
-    #example3()
-    #example4()
-    #example5()
-    example6()
+    main()
 
 
