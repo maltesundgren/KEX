@@ -132,6 +132,7 @@ def plot_world_variables(
     """
     prop_cycle = plt.rcParams["axes.prop_cycle"]
     colors = prop_cycle.by_key()["color"]
+    #colors = ['#1f77b4', '#ff7f0e', '#d62728', '#2ca02c',  '#9467bd']
 
     var_number = len(var_data)
 
