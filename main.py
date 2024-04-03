@@ -197,43 +197,58 @@ def example5():
 # EXAMPLE 6
 def ifpc_control(t, world3, k):
     # ifpc control with feedback value     
-    if not hasattr(ifpc_control, 'pid'):
-        ifpc_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 10)
-
-    ifpc_control.pid.update(fpc_ref, (world3.fpc[k]/400))
-    
-    if t<=policy_year:
+    if t<=policy_year_f:
         return 1
     
-    return max(0.01,ifpc_control.pid.val)
+    if not hasattr(ifpc_control, 'pid'):
+        ifpc_control.pid = Pid_controller(world3.dt, 15, 0.08, 0)
+
+    #fpc_ref.update(pop_ref, (world3.pop[k]/6e9),(230/400),(460/400))
+
+    ifpc_control.pid.update(fpc_ref, (world3.fpc[k]/400),0.01)
+    
+    values = np.append(world3.ifpc_control_values[(k-10):k], ifpc_control.pid.val)
+    val = np.mean(values)
+    return val
 
 
 def isopc_control(t, world3, k):
     # isopc control with feedback value     
-    if not hasattr(isopc_control, 'pid'):
-        isopc_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 1)
-             
     
-    isopc_control.pid.update(sopc_ref, (world3.sopc[k]/400))
-    
-    if t<=policy_year:
+    if t<=policy_year_so:
         return 1
+
+    if not hasattr(isopc_control, 'pid'):
+        isopc_control.pid = Pid_controller(world3.dt, 50, 0.02, 2)
+
+    #sopc_ref.update(pop_ref, (world3.pop[k]/6e9),(100/400), (780/400))         
     
-    return max(0.01, isopc_control.pid.val)
+    isopc_control.pid.update(sopc_ref, (world3.sopc[k]/400), 0.01)
+    
+    values = np.append(world3.isopc_control_values[(k-10):k], isopc_control.pid.val)
+    val = np.mean(values)
+
+    return val
 
 
 def fioac_control(t, world3, k):
     # fioac control with feedback value being fioai
-    if not hasattr(fioac_control, 'pid'):
-        fioac_control.pid = Pid_controller(world3.dt, 0.5, 0.1, 2)
-
-    fioai_ref.update(iopc_ref, (world3.iopc[k]/4e2))
-
-    val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val, 0.01, 1)
-     
-    if t<=policy_year:
+    if t<=policy_year_io:
         return 0.43
     
+    if not hasattr(fioac_control, 'pid'):
+        fioac_control.pid = Pid_controller(world3.dt, 20, 0.01, 2)
+
+    #iopc_ref.update(pop_ref, (world3.pop[k]/6e9),(50/400),(216/400))
+    
+    # Tidigare tvåstegsreglering
+    #fioai_ref.update(iopc_ref, (world3.iopc[k]/400))
+    #val = fioac_control.pid.update(world3.fioai[k], fioai_ref.val, 0.01, 1)
+
+    val = fioac_control.pid.update((world3.iopc[k]/400), iopc_ref, 0.01, 1)
+
+    values = np.append(world3.fioac_control_values[(k-10):k], fioac_control.pid.val)
+    val = np.mean(values)
     return val
 
 
@@ -244,14 +259,25 @@ def example6():
     global iopc_ref
     global sopc_ref
     global fpc_ref
-    global policy_year
+    global policy_year_io
+    global policy_year_f
+    global policy_year_so
+    global pop_ref
+    global average_num_ele
 
-    policy_year = 1950
+    average_num_ele = 100
+    pop_ref = 0.5
+    policy_year_io = 1950
+    policy_year_f = 2050
+    policy_year_so = 2300
     world3 = pyworld3.World3(year_max=2500) 
-    fioai_ref = Pid_controller(world3.dt, 1.8, 0.01, 5)
-    sopc_ref = 0.5
-    iopc_ref = 0.25
+    #fioai_ref = Pid_controller(world3.dt, 1.5, 0.01, 1)
+    sopc_ref = 1
+    iopc_ref = 0.2
     fpc_ref = 0.6
+    #iopc_ref = Pid_controller(world3.dt, 0.5, 0.005, 5)
+    #sopc_ref = Pid_controller(world3.dt, 0.5, 0.005, 5)
+    #fpc_ref = Pid_controller(world3.dt, 0.5, 0.005, 5)
 
     world3.set_world3_control(fioac_control=fioac_control, isopc_control=isopc_control, ifpc_control=ifpc_control)                                   
     world3.init_world3_constants()                                 
@@ -260,23 +286,20 @@ def example6():
     world3.set_world3_delay_functions()                             
     world3.run_world3()
 
-    print(max(world3.pop))
-    
     """
     plot_world_variables(
         world3.time,
-        [world3.sopc, world3.iopc, world3.fpc ,world3.pop, world3.nrfr],
-        ["SOPC", "IOPC", "FPC", "POP","NRFR"],
-        [[0, 1.05*max(world3.sopc)], [0, 1.05 * max(world3.iopc)], [0, 1.05*max(world3.fpc)], [0, 16e9], [0, 1]],
+        [world3.iopc, world3.fioac, world3.fioai, world3.nrfr],
+        ["IOPC","FIOAC", "fioai", "NRFR"],
+        [[0, 400], [0, 1], [0, 1], [0,1]],
         figsize=(7, 5),
         #img_background="./img/standard_run.jpg",
         grid=1,
-        title="World3 standard run",
+        title="Taking away switching at policy year",
     )
     plt.show()
-
-    """    
-
+    """
+    
     plot_world_variables(
         world3.time,
         [world3.nrfr, world3.iopc, world3.fpc, world3.pop, world3.ppolx],
@@ -289,22 +312,43 @@ def example6():
     )
     plt.show()
     
-"""
+    """
     plot_world_variables(
         world3.time,
-        [(world3.iopc/4e2), (world3.io/1e12), (world3.nrfr), world3.pop],
-        ["IOPC", "IO", "NRFR", "POP"],
-        [[0, 1.1*max(world3.iopc/4e2)], [0, 2], [0, 1.1], [0, 16e9]],
+        [(world3.iopc), (world3.io/1e12), (world3.nrfr), world3.pop, world3.sopc],
+        ["IOPC", "IO", "NRFR", "POP", "SOPC"],
+        [[0, 1.1*max(world3.iopc)], [0, 2], [0, 1.1], [0, 16e9], [0, 1.1*max(world3.sopc)]],
         figsize=(7, 5),
         #img_background="./img/fig7-7.png",
         grid=1,
-        title='Cascade control for IOPC')
+        title='Cascade control for POP')
     plt.show()
+    """
+    """
+    iopc_values = np.linspace(0,2000)
+    plt.plot(iopc_values, world3.hsapc_f(iopc_values), 'r')
+    plt.hlines(100, 0, 2000, 'b')
+    plt.hlines(50, 0, 2000, 'g')
+    plt.show()
+    ehspc_values = np.linspace(0,230)
+    plt.plot(ehspc_values, world3.lmhs1_f(ehspc_values), 'r')
+    plt.plot(ehspc_values, world3.lmhs2_f(ehspc_values), 'b')
+    plt.show()
+    """
+    
+    """
+    x_values = np.linspace(0, 1600)
+    plt.plot(x_values, world3.pcrum_f(x_values), 'r')
+    #plt.hlines(1, 0, 1600)
+    plt.show()
+    plt.plot(x_values, world3.cmi_f(x_values), 'b')
+    plt.show()
+    print(f"CMI för IOPC=100: {world3.cmi_f(100)}")
+    print(f"CMI för IOPC=216: {world3.cmi_f(216)}")
+    """
+    
 
     
-    x_values = np.linspace(0, 1600)
-    plt.plot(x_values, world3.pcrum_f(x_values))
-    plt.show()"""
     
 
 
