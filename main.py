@@ -6,7 +6,6 @@ from pyworld3.specials import Delay3
 from Pid_controller import Pid_controller
 
 
-# EXAMPLE 6
 def ifpc_control(t, world3, k):
     # ifpc control with feedback value     
     if t<=policy_year_f:
@@ -80,19 +79,6 @@ def example6():
     world3.set_world3_delay_functions()                             
     world3.run_world3()
 
-    """
-    plot_world_variables(
-        world3.time,
-        [world3.iopc, world3.fioac, world3.fioai, world3.nrfr],
-        ["IOPC","FIOAC", "fioai", "NRFR"],
-        [[0, 400], [0, 1], [0, 1], [0,1]],
-        figsize=(7, 5),
-        #img_background="./img/standard_run.jpg",
-        grid=1,
-        title="Taking away switching at policy year",
-    )
-    plt.show()
-    """
     
     plot_world_variables(
         world3.time,
@@ -107,40 +93,7 @@ def example6():
     )
     plt.savefig("fig_STD_2200.png")
     
-    """
-    plot_world_variables(
-        world3.time,
-        [(world3.iopc), (world3.io/1e12), (world3.nrfr), world3.pop, world3.sopc],
-        ["IOPC", "IO", "NRFR", "POP", "SOPC"],
-        [[0, 1.1*max(world3.iopc)], [0, 2], [0, 1.1], [0, 16e9], [0, 1.1*max(world3.sopc)]],
-        figsize=(7, 5),
-        #img_background="./img/fig7-7.png",
-        grid=1,
-        title='Cascade control for POP')
-    plt.show()
-    """
-    """
-    iopc_values = np.linspace(0,2000)
-    plt.plot(iopc_values, world3.hsapc_f(iopc_values), 'r')
-    plt.hlines(100, 0, 2000, 'b')
-    plt.hlines(50, 0, 2000, 'g')
-    plt.show()
-    ehspc_values = np.linspace(0,230)
-    plt.plot(ehspc_values, world3.lmhs1_f(ehspc_values), 'r')
-    plt.plot(ehspc_values, world3.lmhs2_f(ehspc_values), 'b')
-    plt.show()
-    """
-    
-    """
-    x_values = np.linspace(0, 1600)
-    plt.plot(x_values, world3.pcrum_f(x_values), 'r')
-    #plt.hlines(1, 0, 1600)
-    plt.show()
-    plt.plot(x_values, world3.cmi_f(x_values), 'b')
-    plt.show()
-    print(f"CMI för IOPC=100: {world3.cmi_f(100)}")
-    print(f"CMI för IOPC=216: {world3.cmi_f(216)}")
-    """
+
     
 
     
