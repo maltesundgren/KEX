@@ -105,6 +105,19 @@ def main():
     plt.savefig("fig_STD_2500.png")
     """
 
+    plot_world_variables(
+        world3.time,
+        [world3.nrfr, world3.iopc, world3.fpc, world3.sopc],
+        ["NRFR", "IOPC", "FPC", "SOPC"],
+        [[0, 1], [0, 1e3], [0, 1e3], [0, 1e3]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1,
+        title="Control of World3")
+    plt.savefig("fig_control_2200.png")
+
+    """
     fpc_ifpc = np.linspace(0, 3)
     plt.figure("fioaa_f")
     plt.plot(fpc_ifpc, world3.fioaa_f(fpc_ifpc))
@@ -139,7 +152,7 @@ def main():
     plt.xlabel("IOPC")
     plt.ylabel("CMI")
     plt.savefig("cmi_f.png")
-
+    """
 
     
 
