@@ -104,7 +104,7 @@ def main():
     )
     plt.savefig("fig_STD_2500.png")
     """
-
+    """
     plot_world_variables(
         world3.time,
         [world3.nrfr, world3.iopc, world3.fpc, world3.sopc],
@@ -116,6 +116,19 @@ def main():
         grid=1,
         title="Control of World3")
     plt.savefig("fig_control_2200.png")
+    """
+
+    plot_world_variables(
+        world3.time,
+        [world3.ppolx],
+        ["PPOLX"],
+        [[0, 32]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        img_background="./img/standard_run.jpg",
+        grid=1,
+        title="PPOLX")
+    plt.savefig("fig_ppolx.png")
 
     """
     fpc_ifpc = np.linspace(0, 3)
