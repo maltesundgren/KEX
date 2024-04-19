@@ -8,7 +8,7 @@ from pyworld3.utils import plot_world_variables
 params = {"lines.linewidth": "3"}
 plt.rcParams.update(params)
 
-world3 = World3(year_max=2200)
+world3 = World3(year_max=2500)
 world3.set_world3_control()
 world3.init_world3_constants()
 world3.init_world3_variables()
@@ -28,7 +28,7 @@ plot_world_variables(
 )
 plt.savefig("fig_world3_standard_POP_IO_PPOLX.pdf")
 """
-
+"""
 plot_world_variables(
     world3.time,
     [world3.fpc, world3.sopc, world3.pop,],
@@ -39,7 +39,18 @@ plot_world_variables(
     #title="World3 standard run - POP",
 )
 plt.savefig("fig_world3_standard_POP_SO_F.pdf")
+"""
 
+plot_world_variables(
+    world3.time,
+    [world3.nrfr, world3.pop],
+    ["NRFR\n[]", "POP\n[p]"],
+    [[0,1], [0, 16e9]],
+    #img_background="./img/fig7-7.png",
+    figsize=(7, 5),
+    #title="World3 standard run - POP",
+)
+plt.savefig("fig_world3_standard_2500_POP_NRFR.pdf")
 
 """
 plot_world_variables(
