@@ -94,18 +94,18 @@ def main():
     )
     plt.savefig("fig_control_comp_STD_nr_io_ppolx.pdf")
     """
-    """
+    
     plot_world_variables(
         world3.time,
         [world3.fpc, world3.sopc, world3.pop,],
         ["FPC\n      [ve kg/py]", "SOPC\n[$/py]", "POP\n[p]"],
         [[0,0.6e3], [0,1e3], [0, 16e9]],
-        #img_background="./img/fig7-7.png",
+        img_background="./img/POP_FPC_SOPC_Background.png",
         figsize=(7, 5),
         #title="World3 standard run - POP",
     )
-    plt.savefig("fig_world3_standard_POP_SO_F.pdf")
-    """
+    plt.savefig("fig_control_comp_STD_POP_SO_F.pdf")
+    
     """
     plot_world_variables(
         world3.time,

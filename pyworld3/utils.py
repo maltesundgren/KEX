@@ -135,8 +135,8 @@ def plot_world_variables(
     #colors = ['#d62728','#353334','#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd'] # control signals
     #colors = ['#1f77b4', '#ff7f0e', '#d62728', '#2ca02c',  '#9467bd'] # STD run 2500
     
-    colors = ['#1f77b4', '#ff7f0e', '#4a4a4a']     # NRFR, IO, PPOLX
-    #colors = ['#2ca02c','#9467bd', '#d62728']      # FPC, SOPC, POP 
+    #colors = ['#1f77b4', '#ff7f0e', '#4a4a4a']     # NRFR, IO, PPOLX
+    colors = ['#2ca02c','#9467bd', '#d62728']      # FPC, SOPC, POP 
     #colors = ['#1f77b4', '#d62728']                 # NRFR, POP
 
     var_number = len(var_data)
