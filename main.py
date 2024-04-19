@@ -62,12 +62,12 @@ def main():
     global policy_year_fpc
     global policy_year_sopc
 
-    policy_year_iopc = 1970
+    policy_year_iopc = 1972
     policy_year_fpc = 2120
-    policy_year_sopc = 2130
-    sopc_ref = 0.8
-    iopc_ref = 0.3
-    fpc_ref = 0.7
+    policy_year_sopc = 2130     # Value * 400
+    sopc_ref = 0.8              # 320
+    iopc_ref = 0.3              # 120
+    fpc_ref = 0.7               # 280
 
     world3 = pyworld3.World3(year_max=2200) 
     world3.set_world3_control(fioac_control=fioac_control, isopc_control=isopc_control, ifpc_control=ifpc_control)                                   
@@ -120,12 +120,12 @@ def main():
 
     plot_world_variables(
         world3.time,
-        [world3.ppolx],
-        ["PPOLX"],
-        [[0, 32]],
+        [world3.pop, world3.ppolx],
+        ["POP", "PPOLX"],
+        [[0, 9e9], [0,24]],
         figsize=(7, 5),
-        #img_background="./img/control_2200.png",
-        img_background="./img/standard_run.jpg",
+        img_background="img/PPOLX_bakgrund.png",
+        #img_background="./img/standard_run.jpg",
         grid=1,
         title="PPOLX")
     plt.savefig("fig_ppolx.png")
