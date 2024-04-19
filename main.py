@@ -77,6 +77,49 @@ def main():
     world3.set_world3_delay_functions()                             
     world3.run_world3()
 
+
+
+    params = {"lines.linewidth": "3"}
+    plt.rcParams.update(params)
+
+    """
+    plot_world_variables(
+        world3.time,
+        [world3.nrfr, world3.iopc, world3.ppolx,],
+        ["NRFR\n[]", "IOPC\n[$/py]", "PPOLX\n[]"],
+        [[0, 1], [0,0.6e3] ,[0,16]],
+        img_background="./img/POP_IO_PPOLX_2200.png",
+        figsize=(7, 5),
+        #title="World3 standard run - POP",
+    )
+    plt.savefig("fig_control_comp_STD_nr_io_ppolx.pdf")
+    """
+    """
+    plot_world_variables(
+        world3.time,
+        [world3.fpc, world3.sopc, world3.pop,],
+        ["FPC\n      [ve kg/py]", "SOPC\n[$/py]", "POP\n[p]"],
+        [[0,0.6e3], [0,1e3], [0, 16e9]],
+        #img_background="./img/fig7-7.png",
+        figsize=(7, 5),
+        #title="World3 standard run - POP",
+    )
+    plt.savefig("fig_world3_standard_POP_SO_F.pdf")
+    """
+    """
+    plot_world_variables(
+        world3.time,
+        [world3.nrfr, world3.pop],
+        ["NRFR\n[]", "POP\n[p]"],
+        [[0,1], [0, 16e9]],
+        #img_background="./img/fig7-7.png",
+        figsize=(7, 5),
+        #title="World3 standard run - POP",
+    )
+    plt.savefig("fig_world3_standard_2500_POP_NRFR.pdf")
+    """
+
+
     """
     plot_world_variables(
         world3.time,
@@ -117,7 +160,7 @@ def main():
         title="Control of World3")
     plt.savefig("fig_control_2200.png")
     """
-
+    """
     plot_world_variables(
         world3.time,
         [world3.pop, world3.ppolx],
@@ -129,7 +172,7 @@ def main():
         grid=1,
         title="PPOLX")
     plt.savefig("fig_ppolx.png")
-
+    """
     """
     fpc_ifpc = np.linspace(0, 3)
     plt.figure("fioaa_f")
