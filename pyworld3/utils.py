@@ -132,9 +132,12 @@ def plot_world_variables(
     """
     prop_cycle = plt.rcParams["axes.prop_cycle"]
     #colors = prop_cycle.by_key()["color"]
-    colors = ['#d62728','#353334','#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd'] # control signals
+    #colors = ['#d62728','#353334','#1f77b4', '#ff7f0e', '#2ca02c',  '#9467bd'] # control signals
     #colors = ['#1f77b4', '#ff7f0e', '#d62728', '#2ca02c',  '#9467bd'] # STD run 2500
-
+    
+    colors = ['#1f77b4', '#ff7f0e', '#4a4a4a']    # NRFR, IO, PPOLX
+    #colors = ['#d62728','#9467bd','#2ca02c']      # POP, SOPC, FPC
+    
 
     var_number = len(var_data)
 

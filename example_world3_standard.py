@@ -18,16 +18,17 @@ world3.run_world3(fast=False)
 
 plot_world_variables(
     world3.time,
-    [world3.pop, world3.ppolx,],
-    ["POP", "PPOLX"],
-    [[0, 9e9], [0,24]],
+    [world3.nrfr, world3.iopc, world3.ppolx,],
+    ["NRFR \n []", "IOPC \n [$/py]", "PPOLX \n []"],
+    [[0, 1], [0,0.6e3] ,[0,16]],
     #img_background="./img/fig7-7.png",
     figsize=(7, 5),
-    title="World3 standard run - General",
+    #title="World3 standard run - POP",
 )
-plt.savefig("fig_world3_standard_general_PPOLX.pdf")
+plt.savefig("fig_world3_standard_POP_IO_PPOLX.pdf")
 
 
+"""
 plot_world_variables(
     world3.time,
     [world3.fcaor, world3.io, world3.tai, world3.aiph, world3.fioaa],
@@ -49,3 +50,4 @@ plot_world_variables(
     title="World3 standard run - Agriculture sector",
 )
 plt.savefig("fig_world3_standard_agriculture.pdf")
+"""
