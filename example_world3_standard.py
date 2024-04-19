@@ -31,21 +31,21 @@ plt.savefig("fig_world3_standard_POP_IO_PPOLX.pdf")
 """
 plot_world_variables(
     world3.time,
-    [world3.fpc, world3.sopc, world3.pop,],
+    [world3.fpc, world3.sopc, world3.pop],
     ["FPC\n      [ve kg/py]", "SOPC\n[$/py]", "POP\n[p]"],
-    [[0,0.6e3], [0,1e3], [0, 16e9]],
+    [[0,0.6e3], [0,1e3], [0, 9e9]],
     #img_background="./img/fig7-7.png",
     figsize=(7, 5),
     #title="World3 standard run - POP",
 )
 plt.savefig("fig_world3_standard_POP_SO_F.pdf")
-"""
 
+"""
 plot_world_variables(
     world3.time,
     [world3.nrfr, world3.pop],
     ["NRFR\n[]", "POP\n[p]"],
-    [[0,1], [0, 16e9]],
+    [[0,1], [0, 9e9]],
     #img_background="./img/fig7-7.png",
     figsize=(7, 5),
     #title="World3 standard run - POP",
