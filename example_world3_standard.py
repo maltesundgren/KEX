@@ -39,7 +39,7 @@ plot_world_variables(
     #title="World3 standard run - POP",
 )
 plt.savefig("fig_world3_standard_POP_SO_F.pdf")
-
+"""
 """
 plot_world_variables(
     world3.time,
@@ -51,7 +51,7 @@ plot_world_variables(
     #title="World3 standard run - POP",
 )
 plt.savefig("fig_world3_standard_2500_POP_NRFR.pdf")
-
+"""
 """
 plot_world_variables(
     world3.time,
