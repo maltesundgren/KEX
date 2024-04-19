@@ -27,12 +27,13 @@ def isopc_control(t, world3, k):
         return 1
 
     if not hasattr(isopc_control, 'pid'):
-        isopc_control.pid = Pid_controller(world3.dt, 50, 0.02, 2)        
+        isopc_control.pid = Pid_controller(world3.dt, 0.8, 0.02, 0)        
     
     isopc_control.pid.update(sopc_ref, (world3.sopc[k]/400), 0.01)
     
-    values = np.append(world3.isopc_control_values[(k-10):k], isopc_control.pid.val)
-    val = np.mean(values)
+    #values = np.append(world3.isopc_control_values[(k-10):k], isopc_control.pid.val)
+    #val = np.mean(values)
+    val = isopc_control.pid.val
 
     return val
 
@@ -62,7 +63,8 @@ def main():
     global policy_year_fpc
     global policy_year_sopc
 
-    policy_year_iopc = 1970
+    policy_year_iopc = 1972
+
     policy_year_fpc = 2120
     policy_year_sopc = 2130
     sopc_ref = 0.8
@@ -70,7 +72,7 @@ def main():
     fpc_ref = 0.7
 
     world3 = pyworld3.World3(year_max=2200) 
-    world3.set_world3_control(fioac_control=fioac_control, isopc_control=isopc_control, ifpc_control=ifpc_control)                                   
+    world3.set_world3_control(fioac_control=fioac_control, ifpc_control=ifpc_control, isopc_control=isopc_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
     world3.set_world3_table_functions()                             
@@ -117,7 +119,7 @@ def main():
         title="Control of World3")
     plt.savefig("fig_control_2200.png")
     """
-
+    """
     plot_world_variables(
         world3.time,
         [world3.ppolx],
@@ -129,7 +131,70 @@ def main():
         grid=1,
         title="PPOLX")
     plt.savefig("fig_ppolx.png")
+    """
 
+    params = {"lines.linewidth": "3"}
+    plt.rcParams.update(params)
+
+    plot_world_variables(
+        world3.time,
+        [world3.iopc, world3.nrfr, world3.ppolx],
+        ["IOPC\n", "NRFR\n", "PPOLX\n"],
+        [[0, 1e3], [-0.1, 1.1], [0, 1e3]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1)
+    plt.savefig("simulation_io_nr_ppolx.png")
+
+    plot_world_variables(
+        world3.time,
+        [world3.pop, world3.sopc, world3.fpc],
+        ["POP\n", "SOPC\n", "FPC\n"],
+        [[0, 16e9], [0, 1e3], [0, 1e3]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1)
+    plt.savefig("simulation_pop_f_so.png")
+
+
+    """
+    plot_world_variables(
+        world3.time,
+        [world3.iopc, world3.fioas, world3.isopc],
+        ["SOPC", "FIOAS", "ISOPC"],
+        [[0, 1e3], [-0.1, 1.1], [0, 1e3]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1)
+    plt.savefig("sopc_control.png")
+
+    
+    plot_world_variables(
+        world3.time,
+        [world3.iopc, world3.fioac],
+        ["IOPC\n[$/py]", "FIOAC\n[]"],
+        [[0, 600], [-0.1, 1.1]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1)
+    plt.savefig("iopc_pid_and_ma.png")
+
+
+    plot_world_variables(
+        world3.time,
+        [world3.pop, world3.nrfr],
+        ["POP\n[p]", "NRFR\n[]"],
+        [[0, 16e9], [-0.1, 1.1]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1)
+    plt.savefig("low_pop_2300.png")
+    """
     """
     fpc_ifpc = np.linspace(0, 3)
     plt.figure("fioaa_f")
