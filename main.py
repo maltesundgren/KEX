@@ -65,13 +65,13 @@ def main():
 
     policy_year_iopc = 1972
 
-    policy_year_fpc = 2120
-    policy_year_sopc = 2130
-    sopc_ref = 0.8
-    iopc_ref = 0.3
-    fpc_ref = 0.7
+    policy_year_fpc = 1972
+    policy_year_sopc = 1972
+    sopc_ref = 3
+    iopc_ref = 1
+    fpc_ref = 7
 
-    world3 = pyworld3.World3(year_max=2200) 
+    world3 = pyworld3.World3(year_max=2300) 
     world3.set_world3_control(fioac_control=fioac_control, ifpc_control=ifpc_control, isopc_control=isopc_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
@@ -133,9 +133,22 @@ def main():
     plt.savefig("fig_ppolx.png")
     """
 
-    params = {"lines.linewidth": "3"}
-    plt.rcParams.update(params)
+    #params = {"lines.linewidth": "3"}
+    #plt.rcParams.update(params)
 
+    plot_world_variables(
+        world3.time,
+        [world3.nrfr, world3.pop],
+        ["NRFR\n[]", "POP\n[p]"],
+        [[-0.1, 1.1], [0, 16e9]],
+        figsize=(7, 5),
+        #img_background="./img/control_2200.png",
+        #img_background="./img/standard_run.jpg",
+        grid=1)
+    plt.show()
+    #plt.savefig("simulation_io_nr_ppolx.png")
+
+    """
     plot_world_variables(
         world3.time,
         [world3.iopc, world3.nrfr, world3.ppolx],
@@ -157,7 +170,7 @@ def main():
         #img_background="./img/standard_run.jpg",
         grid=1)
     plt.savefig("simulation_pop_f_so.png")
-
+    """
 
     """
     plot_world_variables(
