@@ -69,7 +69,7 @@ def main():
     iopc_ref = 0.3              # 120
     fpc_ref = 0.7               # 280
 
-    world3 = pyworld3.World3(year_max=2200) 
+    world3 = pyworld3.World3(year_max=2500) 
     world3.set_world3_control(fioac_control=fioac_control, isopc_control=isopc_control, ifpc_control=ifpc_control)                                   
     world3.init_world3_constants()                                 
     world3.init_world3_variables()                              
@@ -94,30 +94,31 @@ def main():
     )
     plt.savefig("fig_control_comp_STD_nr_io_ppolx.pdf")
     """
-    
+    """
     plot_world_variables(
         world3.time,
-        [world3.fpc, world3.sopc, world3.pop,],
+        [world3.fpc, world3.sopc, world3.pop],
         ["FPC\n      [ve kg/py]", "SOPC\n[$/py]", "POP\n[p]"],
-        [[0,0.6e3], [0,1e3], [0, 16e9]],
+        [[0,0.6e3], [0,1e3], [0, 9e9]],
         img_background="./img/POP_FPC_SOPC_Background.png",
         figsize=(7, 5),
         #title="World3 standard run - POP",
     )
     plt.savefig("fig_control_comp_STD_POP_SO_F.pdf")
-    
     """
+
+    
     plot_world_variables(
         world3.time,
         [world3.nrfr, world3.pop],
         ["NRFR\n[]", "POP\n[p]"],
-        [[0,1], [0, 16e9]],
-        #img_background="./img/fig7-7.png",
+        [[0,1], [0, 9e9]],
+        img_background="./img/POP_NRFR_2500_Background.png",
         figsize=(7, 5),
         #title="World3 standard run - POP",
     )
-    plt.savefig("fig_world3_standard_2500_POP_NRFR.pdf")
-    """
+    plt.savefig("fig_control_2500_comp_std_nr_pop.pdf")
+    
 
 
     """
